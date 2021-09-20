@@ -1,7 +1,7 @@
-import {StatusBar} from 'expo-status-bar';
 import React from 'react';
-import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import List from './components/List';
+import PropTypes from 'prop-types';
+import {FlatList} from 'react-native';
+import ListItem from './ListItem';
 
 const mediaArray = [
   {
@@ -36,27 +36,15 @@ const mediaArray = [
   },
 ];
 
-const App = () => {
+const List = (props) => {
   return (
-    <SafeAreaView style={styles.droidSafeArea}>
-      <View style={styles.container}>
-        <List />
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaView>
+    <FlatList
+      data={mediaArray}
+      renderItem={({item}) => <ListItem singleMedia={item} />}
+    />
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
+List.propTypes = {};
 
-  droidSafeArea: {
-    flex: 1,
-    backgroundColor: '#ccc',
-    paddingTop: Platform.OS === 'android' ? 30 : 0,
-  },
-});
-
-export default App;
+export default List;
