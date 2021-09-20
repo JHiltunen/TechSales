@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {FlatList} from 'react-native';
 import ListItem from './ListItem';
+import {baseUrl} from '../utils/variables';
 
 const List = (props) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const url =
-    'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
+  const url = baseUrl + 'media';
 
   useEffect(() => {
     const loadMedia = async () => {
