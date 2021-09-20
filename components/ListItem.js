@@ -9,7 +9,7 @@ const ListItem = ({singleMedia}) => {
       <View style={styles.imagebox}>
         <Image
           style={styles.image}
-          source={{uri: uploadsUrl + singleMedia.filename}}
+          source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
         />
       </View>
       <View style={styles.textbox}>
