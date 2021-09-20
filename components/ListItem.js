@@ -8,7 +8,7 @@ const ListItem = ({singleMedia, navigation}) => {
     <TouchableOpacity
       style={styles.row}
       onPress={() => {
-        navigation.navigate('Single');
+        navigation.navigate('Single', singleMedia);
       }}
     >
       <View style={styles.imagebox}>

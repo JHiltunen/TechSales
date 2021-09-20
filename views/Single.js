@@ -1,16 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {uploadsUrl} from '../utils/variables';
 
-const Single = (props) => {
+const Single = ({route}) => {
+  const {params} = route;
+  console.log('Single', route.params);
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Single</Text>
+      <Text>{params.title}</Text>
+      <Image
+        style={{width: 200, height: 300}}
+        source={{uri: uploadsUrl + params.filename}}
+      />
+      <Text>{params.description}</Text>
+      <Text>{params.user_id}</Text>
+      <Text>{params.time_added}</Text>
+      <Text>{params.media_type}</Text>
     </SafeAreaView>
   );
 };
 
-Single.propTypes = {};
+Single.propTypes = {
+  route: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
