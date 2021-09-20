@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import {Platform, SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import List from '../components/List';
 
-const Home = (props) => {
+const Home = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <List />
+      <List navigation={navigation} />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
 
-Home.propTypes = {};
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
