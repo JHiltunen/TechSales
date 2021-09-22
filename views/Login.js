@@ -1,11 +1,12 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, Text, KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, KeyboardAvoidingView} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import {Text} from 'react-native-elements';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -29,8 +30,9 @@ const Login = ({navigation}) => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <Text>Login</Text>
+      <Text h4>Login</Text>
       <LoginForm navigation={navigation} />
+      <Text h4>Register</Text>
       <RegisterForm navigation={navigation} />
     </KeyboardAvoidingView>
   );
@@ -40,8 +42,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

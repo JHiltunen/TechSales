@@ -2,7 +2,8 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useLogin} from '../hooks/ApiHooks';
-import {Button, View} from 'react-native';
+import {KeyboardAvoidingView} from 'react-native';
+import {Button} from 'react-native-elements';
 import FormTextInput from './FormTextInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useLoginForm from '../hooks/LoginHooks';
@@ -28,7 +29,7 @@ const LoginForm = ({navigation}) => {
   const {inputs, handleInputChange} = useLoginForm();
 
   return (
-    <View>
+    <KeyboardAvoidingView>
       <FormTextInput
         autoCapitalize="none"
         placeholder="username"
@@ -41,8 +42,8 @@ const LoginForm = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <Button title="Login!" onPress={doLogin} />
-    </View>
+      <Button raised title="Login!" onPress={doLogin} />
+    </KeyboardAvoidingView>
   );
 };
 

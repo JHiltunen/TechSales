@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, Button, Alert} from 'react-native';
+import {Button, Alert, KeyboardAvoidingView} from 'react-native';
 import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
 import {useUser} from '../hooks/ApiHooks';
@@ -19,7 +19,7 @@ const RegisterForm = ({navigation}) => {
   };
 
   return (
-    <View>
+    <KeyboardAvoidingView>
       <FormTextInput
         autoCapitalize="none"
         placeholder="username"
@@ -41,8 +41,8 @@ const RegisterForm = ({navigation}) => {
         placeholder="full name"
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button title="Register!" onPress={doRegister} />
-    </View>
+      <Button raised title="Register!" onPress={doRegister} />
+    </KeyboardAvoidingView>
   );
 };
 
