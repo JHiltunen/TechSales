@@ -8,7 +8,7 @@ import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 
 const Login = ({navigation}) => {
-  const {setIsLoggedIn} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {checkToken} = useUser();
 
   const getToken = async () => {
@@ -18,6 +18,7 @@ const Login = ({navigation}) => {
     if (userToken) {
       const userInfo = await checkToken(userToken);
       if (userInfo.user_id) {
+        setUser(userInfo);
         setIsLoggedIn(true);
       }
     }
