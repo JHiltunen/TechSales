@@ -64,8 +64,22 @@ const useUser = () => {
     }
   };
 
-  const register = async (token) => {
-    // https://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser
+  const register = async (inputs) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    try {
+      const response = await fetch(baseUrl + 'users', fetchOptions);
+      const json = await response.json();
+      return json;
+    } catch (e) {
+      console.log('ApiHooks register', e.message);
+      return false;
+    }
   };
   return {checkToken, register};
 };
