@@ -13,6 +13,7 @@ const Stack = createNativeStackNavigator();
 
 const TabScreen = () => {
   return (
+    // TODO: move content of <NavigationContainer> here
     <Tab.Navigator>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
@@ -21,7 +22,7 @@ const TabScreen = () => {
 };
 
 const StackScreen = () => {
-  const [isLoggedIn] = useContext(MainContext);
+  const {isLoggedIn} = useContext(MainContext);
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
