@@ -1,15 +1,16 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {MainContext} from '../contexts/MainContext';
-import {useLogin} from '../hooks/ApiHooks';
-import {KeyboardAvoidingView} from 'react-native';
-import {Button} from 'react-native-elements';
-import FormTextInput from './FormTextInput';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {View} from 'react-native';
+import {Button, Input} from 'react-native-elements';
 import useLoginForm from '../hooks/LoginHooks';
+import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useLogin} from '../hooks/ApiHooks';
 
 const LoginForm = ({navigation}) => {
-  const {setUser, setIsLoggedIn} = useContext(MainContext);
+  const {inputs, handleInputChange} = useLoginForm();
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  4;
   const {login} = useLogin();
 
   const doLogin = async () => {
@@ -17,33 +18,29 @@ const LoginForm = ({navigation}) => {
       const loginInfo = await login(inputs);
       console.log('doLogin response', loginInfo);
       await AsyncStorage.setItem('userToken', loginInfo.token);
-      // TODO: Save user info (loginInfo.user) to MainContext
       setUser(loginInfo.user);
       setIsLoggedIn(true);
     } catch (error) {
       console.log('doLogin error', error);
     }
-    // navigation.navigate('Home');
   };
 
-  const {inputs, handleInputChange} = useLoginForm();
-
   return (
-    <KeyboardAvoidingView>
-      <FormTextInput
+    <View>
+      <Input
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
 
-      <Button raised title="Login!" onPress={doLogin} />
-    </KeyboardAvoidingView>
+      <Button title="Sing In!" onPress={doLogin} />
+    </View>
   );
 };
 

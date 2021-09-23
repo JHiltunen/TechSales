@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useUser} from './ApiHooks';
-import {validator} from '../utils/validator';
+import {validator} from '../utils/validator.js';
 
 const constraints = {
   username: {
@@ -20,7 +20,7 @@ const constraints = {
   confirmPassword: {
     equality: {
       attribute: 'password',
-      message: ' passwords do not match',
+      message: '^ passwords do not match',
     },
   },
   email: {
@@ -29,12 +29,12 @@ const constraints = {
       message: 'must be a valid email address',
     },
   },
-  /*   full_name: {
+  full_name: {
     length: {
       minimum: 3,
       message: 'must be at least 3 chars',
     },
-  }, */
+  },
 };
 
 const useSignUpForm = (callback) => {
@@ -45,10 +45,10 @@ const useSignUpForm = (callback) => {
     email: '',
     full_name: '',
   });
-
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (name, text) => {
+    console.log(name, text);
     setInputs((inputs) => {
       return {
         ...inputs,
@@ -87,21 +87,18 @@ const useSignUpForm = (callback) => {
         setErrors((errors) => {
           return {...errors, username: 'Username already exists'};
         });
-      } else {
-        setErrors((errors) => {
-          return {...errors, username: null};
-        });
       }
-    } catch (e) {
-      console.log('username check failed', e);
+    } catch (error) {
+      console.log('username check failed', error);
     }
   };
+
   return {
     handleInputChange,
+    handleOnEndEditing,
     inputs,
     errors,
     checkUsername,
-    handleOnEndEditing,
   };
 };
 

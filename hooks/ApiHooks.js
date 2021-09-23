@@ -13,8 +13,8 @@ const useMedia = () => {
 
   const loadMedia = async () => {
     try {
-      const response = await fetch(baseUrl + 'media');
-      const mediaWithoutThumbnail = await response.json();
+      // const response = await fetch(baseUrl + 'media');
+      const mediaWithoutThumbnail = await doFetch(baseUrl + 'media');
       const allFiles = mediaWithoutThumbnail.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
@@ -25,9 +25,13 @@ const useMedia = () => {
   };
 
   const loadSingleMedia = async (id) => {
-    const response = await fetch(baseUrl + 'media/' + id);
-    const file = await response.json();
-    return file;
+    try {
+      const tiedosto = await doFetch(baseUrl + 'media/' + id);
+      return tiedosto;
+    } catch (e) {
+      console.log('loadSingleMedia', e.message);
+      return {};
+    }
   };
 
   return {mediaArray, loadSingleMedia, loadMedia};
@@ -38,7 +42,7 @@ const useLogin = () => {
     const requestOptions = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: userCredentials,
+      body: JSON.stringify(userCredentials),
     };
     try {
       const loginResponse = await doFetch(baseUrl + 'login', requestOptions);
@@ -75,23 +79,20 @@ const useUser = () => {
     }
   };
 
-  const register = async (inputs) => {
-    const fetchOptions = {
+  const register = async (userCredentials) => {
+    const requestOptions = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(userCredentials),
     };
     try {
-      const response = await fetch(baseUrl + 'users', fetchOptions);
-      const json = await response.json();
-      return json;
-    } catch (e) {
-      console.log('ApiHooks register', e.message);
-      return false;
+      const registerResponse = await doFetch(baseUrl + 'users', requestOptions);
+      return registerResponse;
+    } catch (error) {
+      console.log('register error', error.message);
     }
   };
+
   return {checkToken, register, checkUsernameAvailable};
 };
 

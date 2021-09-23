@@ -12,6 +12,7 @@ const RegisterForm = ({navigation}) => {
 
   const doRegister = async () => {
     try {
+      delete inputs.confirmPassword;
       const registerInfo = await register(inputs);
       if (registerInfo) {
         Alert.alert(registerInfo.message);
@@ -44,7 +45,7 @@ const RegisterForm = ({navigation}) => {
         }}
         errorMessage={errors.password}
       />
-      {/*       <Input
+      <Input
         autoCapitalize="none"
         placeholder="confirm password"
         onChangeText={(txt) => handleInputChange('confirmPassword', txt)}
@@ -53,7 +54,7 @@ const RegisterForm = ({navigation}) => {
           handleOnEndEditing('confirmPassword', event.nativeEvent.text);
         }}
         errorMessage={errors.confirmPassword}
-      /> */}
+      />
       <Input
         autoCapitalize="none"
         placeholder="email"

@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
-import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/LoginForm';
 import {Card, ListItem, Text} from 'react-native-elements';
 
 const Login = ({navigation}) => {
@@ -15,8 +15,7 @@ const Login = ({navigation}) => {
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
-    console.log('logIn asyncstorage token', userToken);
-
+    console.log('logIn asyncstorage token:', userToken);
     if (userToken) {
       const userInfo = await checkToken(userToken);
       if (userInfo.user_id) {
@@ -25,6 +24,7 @@ const Login = ({navigation}) => {
       }
     }
   };
+
   useEffect(() => {
     getToken();
   }, []);
@@ -34,11 +34,8 @@ const Login = ({navigation}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      {/* Add ImageBackground  */}
-
       {registerFormToggle ? (
         <Card>
-          <Card.Divider />
           <Card.Title h4>Register</Card.Title>
           <RegisterForm navigation={navigation} />
         </Card>
@@ -56,8 +53,8 @@ const Login = ({navigation}) => {
         <ListItem.Content>
           <Text style={styles.text}>
             {registerFormToggle
-              ? 'Already registered? Login here'
-              : 'No account? Register here.'}
+              ? 'Already an account? Login here!'
+              : 'No account ? Register Here!'}
           </Text>
         </ListItem.Content>
         <ListItem.Chevron />
@@ -70,6 +67,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
 });
 
