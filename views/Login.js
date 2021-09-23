@@ -1,16 +1,17 @@
-import React, {useContext, useEffect} from 'react';
-import {StyleSheet, KeyboardAvoidingView} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {Text} from 'react-native-elements';
+import {Card, ListItem, Text} from 'react-native-elements';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {checkToken} = useUser();
+  const [registerFormToggle, setRegisterFormToggle] = useState(false);
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -29,11 +30,38 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <Text h4>Login</Text>
-      <LoginForm navigation={navigation} />
-      <Text h4>Register</Text>
-      <RegisterForm navigation={navigation} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      {/* Add ImageBackground  */}
+
+      {registerFormToggle ? (
+        <Card>
+          <Card.Divider />
+          <Card.Title h4>Register</Card.Title>
+          <RegisterForm navigation={navigation} />
+        </Card>
+      ) : (
+        <Card>
+          <Card.Title h4>Login</Card.Title>
+          <LoginForm navigation={navigation} />
+        </Card>
+      )}
+      <ListItem
+        onPress={() => {
+          setRegisterFormToggle(!registerFormToggle);
+        }}
+      >
+        <ListItem.Content>
+          <Text style={styles.text}>
+            {registerFormToggle
+              ? 'Already registered? Login here'
+              : 'No account? Register here.'}
+          </Text>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
     </KeyboardAvoidingView>
   );
 };

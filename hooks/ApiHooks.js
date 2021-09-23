@@ -57,10 +57,21 @@ const useUser = () => {
       headers: {'x-access-token': token},
     };
     try {
-      const userInfo = doFetch(baseUrl + 'users/user', options);
+      const userInfo = await doFetch(baseUrl + 'users/user', options);
       return userInfo;
     } catch (error) {
       console.log('checkToken error', error);
+    }
+  };
+
+  const checkUsernameAvailable = async (username) => {
+    try {
+      const usernameInfo = await doFetch(
+        baseUrl + 'users/username/' + username
+      );
+      return usernameInfo.available;
+    } catch (error) {
+      console.log('checkUsername error', error);
     }
   };
 
@@ -81,7 +92,7 @@ const useUser = () => {
       return false;
     }
   };
-  return {checkToken, register};
+  return {checkToken, register, checkUsernameAvailable};
 };
 
 const useTag = () => {
