@@ -1,40 +1,65 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Avatar, Card, ListItem} from 'react-native-elements';
+import {useTag} from '../hooks/ApiHooks';
+import {uploadsUrl} from '../utils/variables';
 
 const Profile = (props) => {
-  const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
-  console.log('Profile isLoggedIn', isLoggedIn);
-  console.log('user on profile page', user);
+  const {setIsLoggedIn, user} = useContext(MainContext);
+  const [avatar, setAvatar] = useState('https://placekitten.com/400/400');
+
+  const {getFilesByTag} = useTag();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const file = await getFilesByTag('avatar_' + user.user_id);
+        console.log('file', file);
+        setAvatar(uploadsUrl + file.pop().filename);
+      } catch (e) {
+        console.log('useEffect', e.message);
+      }
+    })();
+  }, [user]);
+
   const logout = async () => {
+    await AsyncStorage.clear();
     setIsLoggedIn(false);
-    AsyncStorage.clear();
-    if (!isLoggedIn) {
-      // this is to make sure isLoggedIn has changed, will be removed later
-      props.navigation.navigate('Login');
-    }
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <Text>Username: {user.username}</Text>
-      <Text>Full name: {user.full_name}</Text>
-      <Text>Email: {user.email}</Text>
-      <Button title={'Logout'} onPress={logout} />
-    </SafeAreaView>
+    <Card>
+      <Card.Title>
+        <Text h1>{user.username}</Text>
+      </Card.Title>
+      <Card.Image
+        source={{uri: avatar}}
+        style={styles.image}
+        PlaceholderContent={<ActivityIndicator />}
+      />
+      <ListItem>
+        <Avatar icon={{name: 'email', color: 'black'}} />
+        <Text>{user.email}</Text>
+      </ListItem>
+      <ListItem>
+        <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+        <Text>{user.full_name}</Text>
+      </ListItem>
+      <ListItem bottomDivider onPress={logout}>
+        <Avatar icon={{name: 'logout', color: 'black'}} />
+        <ListItem.Content>
+          <ListItem.Title>Logout</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
+  image: {width: '100%', height: undefined, aspectRatio: 1},
 });
 
 Profile.propTypes = {
