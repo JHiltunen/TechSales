@@ -16,11 +16,11 @@ const useMedia = () => {
 
   const loadMedia = async () => {
     try {
-      const mediaIlmanThumbnailia = await useTag().getFilesByTag(appID);
-      const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
+      const mediaWithoutThumbnail = await useTag().getFilesByTag(appID);
+      const allFiles = mediaWithoutThumbnail.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
-      return Promise.all(kaikkiTiedot);
+      return Promise.all(allFiles);
     } catch (e) {
       console.log('loadMedia', e.message);
     }
