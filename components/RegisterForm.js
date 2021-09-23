@@ -1,48 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Alert, KeyboardAvoidingView} from 'react-native';
-import FormTextInput from './FormTextInput';
+import {Button, Alert, View} from 'react-native';
 import useSignUpForm from '../hooks/RegisterHooks';
 import {useUser} from '../hooks/ApiHooks';
+import {Input} from 'react-native-elements';
 
 const RegisterForm = ({navigation}) => {
-  const {inputs, handleInputChange} = useSignUpForm();
+  const {inputs, errors, handleInputChange, checkUsername} = useSignUpForm();
+  const {register} = useUser();
 
   const doRegister = async () => {
-    const {register} = useUser();
-    const serverResponse = await register(inputs);
-    if (serverResponse) {
-      Alert.alert(serverResponse.message);
-    } else {
-      Alert.alert('register failed');
+    try {
+      const registerInfo = await register(inputs);
+      if (registerInfo) {
+        Alert.alert(registerInfo.message);
+      }
+    } catch (e) {
+      Alert.alert(e.message);
     }
   };
-
   return (
-    <KeyboardAvoidingView>
-      <FormTextInput
+    <View>
+      <Input
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
+        onEndEditing={(event) => {
+          console.log('onEndEditing value', event.nativeEvent.text);
+          checkUsername(event.nativeEvent.text);
+        }}
+        errorMessage={errors.username}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="email"
         onChangeText={(txt) => handleInputChange('email', txt)}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="full name"
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button raised title="Register!" onPress={doRegister} />
-    </KeyboardAvoidingView>
+      <Button title="Register!" onPress={doRegister} />
+    </View>
   );
 };
 
