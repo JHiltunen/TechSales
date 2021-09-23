@@ -1,26 +1,28 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import {MainContext} from '../contexts/MainContext';
 import {doFetch} from '../utils/http';
-import {baseUrl} from '../utils/variables';
+import {appID, baseUrl} from '../utils/variables';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const {update} = useContext(MainContext);
 
   useEffect(() => {
     (async () => {
       setMediaArray(await loadMedia());
     })();
-  }, []);
+  }, [update]);
 
   const loadMedia = async () => {
     try {
-      // const response = await fetch(baseUrl + 'media');
-      const mediaWithoutThumbnail = await doFetch(baseUrl + 'media');
-      const allFiles = mediaWithoutThumbnail.map(async (media) => {
+      const mediaIlmanThumbnailia = await useTag().getFilesByTag(appID);
+      const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
-      return Promise.all(allFiles);
+      return Promise.all(kaikkiTiedot);
     } catch (e) {
-      console.log(e.message);
+      console.log('loadMedia', e.message);
     }
   };
 
@@ -34,7 +36,23 @@ const useMedia = () => {
     }
   };
 
-  return {mediaArray, loadSingleMedia, loadMedia};
+  const uploadMedia = async (formData, token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'POST',
+        headers: {'x-access-token': token},
+        data: formData,
+      };
+      const result = await doFetch(baseUrl + 'media', options);
+      return result;
+    } catch (e) {
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return {mediaArray, loading, loadMedia, loadSingleMedia, uploadMedia};
 };
 
 const useLogin = () => {
@@ -107,7 +125,26 @@ const useTag = () => {
     }
   };
 
-  return {getFilesByTag};
+  // eslint-disable-next-line camelcase
+  const addTag = async (file_id, tag, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({file_id, tag}),
+    };
+    console.log('optiot', options);
+    try {
+      const tagInfo = await doFetch(baseUrl + 'tags', options);
+      return tagInfo;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {getFilesByTag, addTag};
 };
 
 export {useMedia, useLogin, useUser, useTag};
