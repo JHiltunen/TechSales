@@ -6,6 +6,7 @@ import {useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, Card, ListItem} from 'react-native-elements';
 import {Audio, Video} from 'expo-av';
+import {formatDate} from '../utils/dateFunctions';
 
 const Single = ({route}) => {
   const {params} = route;
@@ -41,13 +42,7 @@ const Single = ({route}) => {
     <Card>
       <Card.Title h4>{params.title}</Card.Title>
       <Card.Title>
-        {
-          /* TODO: crashes in android with latest Expo GO -> fix
-          {DateTime.fromISO(params.time_added)
-          .setLocale('fi')
-          .toLocaleString({month: 'long', day: 'numeric', year: 'numeric'})} */
-          params.time_added
-        }
+        {formatDate(new Date(params.time_added), 'HH.mm eeee d. MMMM y')}
       </Card.Title>
       <Card.Divider />
       {params.media_type === 'image' && (
