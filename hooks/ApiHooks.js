@@ -6,7 +6,7 @@ import {appID, baseUrl} from '../utils/variables';
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {update} = useContext(MainContext);
+  const {update, setUpdate} = useContext(MainContext);
 
   useEffect(() => {
     (async () => {
@@ -41,18 +41,33 @@ const useMedia = () => {
       setLoading(true);
       const options = {
         method: 'POST',
-        headers: {'x-access-token': token},
-        data: formData,
+        headers: {
+          'x-access-token': token,
+        },
+        body: formData,
       };
       const result = await doFetch(baseUrl + 'media', options);
-      return result;
+      console.log('axios', result);
+      if (result.data) {
+        setUpdate(update + 1);
+        console.log('update', update);
+        return result;
+      }
     } catch (e) {
+      console.log('uploadMedia error', e);
       throw new Error(e.message);
     } finally {
       setLoading(false);
     }
   };
-  return {mediaArray, loading, loadMedia, loadSingleMedia, uploadMedia};
+
+  return {
+    mediaArray,
+    loading,
+    loadMedia,
+    loadSingleMedia,
+    uploadMedia,
+  };
 };
 
 const useLogin = () => {

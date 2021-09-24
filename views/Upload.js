@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {View, Platform, Alert} from 'react-native';
 import UploadForm from '../components/UploadForm';
@@ -8,44 +8,34 @@ import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {appID} from '../utils/variables';
-import {MainContext} from '../contexts/MainContext';
 
 const Upload = ({navigation}) => {
   // eslint-disable-next-line no-undef
   const [image, setImage] = useState(require('../assets/icon.png'));
   const {inputs, handleInputChange} = useUploadForm();
-  const [type, setType] = useState('');
   const {uploadMedia, loading} = useMedia();
   const {addTag} = useTag();
-  const {update, setUpdate} = useContext(MainContext);
 
   const doUpload = async () => {
-    console.log('doUpload', inputs);
     const filename = image.uri.split('/').pop();
+    // Infer the type of the image
+    const match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    if (type === 'image/jpg') type = 'image/jpeg';
     const formData = new FormData();
     formData.append('file', {uri: image.uri, name: filename, type});
     formData.append('title', inputs.title);
     formData.append('description', inputs.description);
+    // console.log('doUpload', formData);
     try {
       const userToken = await AsyncStorage.getItem('userToken');
       const result = await uploadMedia(formData, userToken);
-      uploadMedia(formData, userToken);
+      console.log('doUpload', result);
       const tagResult = await addTag(result.file_id, appID, userToken);
+      console.log('doUpload addTag', tagResult);
       if (tagResult.message) {
-        Alert.alert(
-          'Upload',
-          result.message,
-          [
-            {
-              text: 'Ok',
-              onPress: () => {
-                setUpdate(update + 1);
-                navigation.navigate('Home');
-              },
-            },
-          ],
-          {cancelable: false}
-        );
+        Alert.alert(tagResult.message);
+        navigation.navigate('Home');
       }
     } catch (e) {
       console.log('doUpload error', e.message);
@@ -76,7 +66,6 @@ const Upload = ({navigation}) => {
 
     if (!result.cancelled) {
       setImage({uri: result.uri});
-      setType(result.type);
     }
   };
   return (
