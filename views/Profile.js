@@ -40,11 +40,11 @@ const Profile = ({navigation}) => {
         PlaceholderContent={<ActivityIndicator />}
       />
       <ListItem>
-        <Avatar icon={{name: 'email', color: 'black'}} />
+        <Avatar icon={{name: 'email', type: 'entypo', color: 'black'}} />
         <Text>{user.email}</Text>
       </ListItem>
       <ListItem>
-        <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+        <Avatar icon={{name: 'user-o', type: 'font-awesome', color: 'black'}} />
         <Text>{user.full_name}</Text>
       </ListItem>
       <ListItem
@@ -53,7 +53,9 @@ const Profile = ({navigation}) => {
           navigation.navigate('My Files');
         }}
       >
-        <Avatar icon={{name: 'logout', color: 'black'}} />
+        <Avatar
+          icon={{name: 'file-text-o', type: 'font-awesome', color: 'black'}}
+        />
         <ListItem.Content>
           <ListItem.Title>My Files</ListItem.Title>
         </ListItem.Content>
