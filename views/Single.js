@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {
@@ -75,12 +80,8 @@ const Single = ({route}) => {
   }, [videoRef]);
 
   const getOwnerInfo = async () => {
-    try {
-      const token = await AsyncStorage.getItem('userToken');
-      setOwnerInfo(await getUserInfo(params.user_id, token));
-    } catch (e) {
-      console.log('getUserInfo', e.message);
-    }
+    const token = await AsyncStorage.getItem('userToken');
+    setOwnerInfo(await getUserInfo(params.user_id, token));
   };
 
   const getLikes = async () => {

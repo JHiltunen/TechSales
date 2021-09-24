@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
+import {Avatar, Button} from 'react-native-elements';
 
-const ListItem = ({singleMedia, navigation}) => {
+const ListItem = ({singleMedia, navigation, showButtons}) => {
   return (
     <TouchableOpacity
       style={styles.row}
@@ -11,15 +12,22 @@ const ListItem = ({singleMedia, navigation}) => {
         navigation.navigate('Single', singleMedia);
       }}
     >
-      <View style={styles.imagebox}>
-        <Image
-          style={styles.image}
-          source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
-        />
-      </View>
+      <Avatar
+        style={styles.image}
+        size="large"
+        square
+        source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
+      ></Avatar>
+
       <View style={styles.textbox}>
         <Text style={styles.listTitle}>{singleMedia.title}</Text>
         <Text>{singleMedia.description}</Text>
+        {showButtons && (
+          <>
+            <Button title="Modify" />
+            <Button title="Delete" />
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -59,6 +67,7 @@ const styles = StyleSheet.create({
 ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
   navigation: PropTypes.object.isRequired,
+  showButtons: PropTypes.bool.isRequired,
 };
 
 export default ListItem;

@@ -3,10 +3,10 @@ import {MainContext} from '../contexts/MainContext';
 import {doFetch} from '../utils/http';
 import {appID, baseUrl} from '../utils/variables';
 
-const useMedia = () => {
+const useMedia = (ownFiles) => {
   const [mediaArray, setMediaArray] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {update} = useContext(MainContext);
+  const {update, user} = useContext(MainContext);
 
   useEffect(() => {
     (async () => {
@@ -16,11 +16,18 @@ const useMedia = () => {
 
   const loadMedia = async () => {
     try {
-      const mediaWithoutThumbnail = await useTag().getFilesByTag(appID);
-      const allFiles = mediaWithoutThumbnail.map(async (media) => {
+      let mediaWhitOutThumbnail = await useTag().getFilesByTag(appID);
+
+      if (ownFiles) {
+        mediaWhitOutThumbnail = mediaWhitOutThumbnail.filter(
+          (item) => item.user_id === user.user_id
+        );
+      }
+
+      const allfiles = mediaWhitOutThumbnail.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
-      return Promise.all(allFiles);
+      return Promise.all(allfiles);
     } catch (e) {
       console.log('loadMedia', e.message);
     }
@@ -47,10 +54,49 @@ const useMedia = () => {
         body: formData,
       };
       const result = await doFetch(baseUrl + 'media', options);
-      console.log('uploadMedia result: ', result);
       return result;
     } catch (e) {
       console.log('uploadMedia error', e);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const modifyMedia = async (data, token, id) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'PUT',
+        headers: {
+          'x-access-token': token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+      const result = await doFetch(baseUrl + 'media/' + id, options);
+      return result;
+    } catch (e) {
+      console.log('modifyMedia error', e);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteMedia = async (id, token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'DELETE',
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const result = await doFetch(baseUrl + 'media/' + id, options);
+      return result;
+    } catch (e) {
+      console.log('deleteMedia error', e);
       throw new Error(e.message);
     } finally {
       setLoading(false);
@@ -63,6 +109,8 @@ const useMedia = () => {
     loadMedia,
     loadSingleMedia,
     uploadMedia,
+    deleteMedia,
+    modifyMedia,
   };
 };
 
@@ -97,16 +145,18 @@ const useUser = () => {
     }
   };
 
-  const getUserInfo = async (userid, token) => {
+  const getUserInfo = async (userId, token) => {
     const options = {
       method: 'GET',
       headers: {'x-access-token': token},
     };
     try {
-      const userInfo = await doFetch(baseUrl + 'users/' + userid, options);
+      const userInfo = await doFetch(baseUrl + 'users/' + userId, options);
+      console.log('getUserInfo', getUserInfo, userId);
+      console.log('getUserInfo', userId);
       return userInfo;
-    } catch (error) {
-      console.log('checkToken error', error);
+    } catch (e) {
+      console.log('checkToken error', e);
     }
   };
 
@@ -130,12 +180,12 @@ const useUser = () => {
     try {
       const registerResponse = await doFetch(baseUrl + 'users', requestOptions);
       return registerResponse;
-    } catch (error) {
-      console.log('register error', error.message);
+    } catch (e) {
+      console.log('register error', e.message);
     }
   };
 
-  return {checkToken, register, checkUsernameAvailable}, getUserInfo;
+  return {checkToken, register, checkUsernameAvailable, getUserInfo};
 };
 
 const useTag = () => {
@@ -159,41 +209,15 @@ const useTag = () => {
       },
       body: JSON.stringify({file_id, tag}),
     };
-    console.log('optiot', options);
     try {
       const tagInfo = await doFetch(baseUrl + 'tags', options);
       return tagInfo;
-    } catch (error) {
-      throw new Error(error.message);
+    } catch (e) {
+      throw new Error(e.message);
     }
   };
 
   return {getFilesByTag, addTag};
 };
 
-const useFavourites = () => {
-  const addFavourite = async (fileId, token) => {
-    // post /favourites
-  };
-
-  const deleteFavourite = async (fileId, token) => {
-    // DELETE /favourites/file/:id
-  };
-
-  const getFavouritesByFileId = async (fileId) => {
-    // get /favourites/file/:id
-  };
-
-  const getMyFavourites = (token) => {
-    // GET /favourites
-  };
-
-  return {
-    addFavourite,
-    deleteFavourite,
-    getFavouritesByFileId,
-    getMyFavourites,
-  };
-};
-
-export {useMedia, useLogin, useUser, useTag, useFavourites};
+export {useMedia, useLogin, useUser, useTag};
