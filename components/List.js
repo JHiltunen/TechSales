@@ -9,7 +9,7 @@ const List = ({navigation}) => {
 
   return (
     <FlatList
-      data={mediaArray.reverse}
+      data={mediaArray.reverse()}
       renderItem={({item}) => (
         <ListItem singleMedia={item} navigation={navigation} />
       )}
