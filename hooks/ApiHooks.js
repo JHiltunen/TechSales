@@ -6,7 +6,7 @@ import {appID, baseUrl} from '../utils/variables';
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {update, setUpdate} = useContext(MainContext);
+  const {update} = useContext(MainContext);
 
   useEffect(() => {
     (async () => {
@@ -47,12 +47,8 @@ const useMedia = () => {
         body: formData,
       };
       const result = await doFetch(baseUrl + 'media', options);
-      console.log('axios', result);
-      if (result.data) {
-        setUpdate(update + 1);
-        console.log('update', update);
-        return result;
-      }
+      console.log('uploadMedia result: ', result);
+      return result;
     } catch (e) {
       console.log('uploadMedia error', e);
       throw new Error(e.message);
