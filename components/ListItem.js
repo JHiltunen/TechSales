@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
 import {Avatar, Button} from 'react-native-elements';
+import {useMedia} from '../hooks/ApiHooks';
+import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListItem = ({singleMedia, navigation, showButtons}) => {
+  const {update, setUpdate} = useContext(MainContext);
+  const {deleteMedia} = useMedia();
   return (
     <TouchableOpacity
       style={styles.row}
@@ -30,7 +35,24 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
                 navigation.navigate('Modify', {singleMedia, navigation});
               }}
             />
-            <Button title="Delete" />
+            <Button
+              title="Delete"
+              onPress={async () => {
+                try {
+                  const token = await AsyncStorage.getItem('userToken');
+                  const response = await deleteMedia(
+                    singleMedia.file_id,
+                    token
+                  );
+                  console.log('Delete', response);
+                  if (response.message) {
+                    setUpdate(update + 1);
+                  }
+                } catch (e) {
+                  console.log('ListItem, delete: ', e.message);
+                }
+              }}
+            />
           </>
         )}
       </View>
