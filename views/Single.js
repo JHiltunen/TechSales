@@ -1,24 +1,105 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Image, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {format} from 'date-fns';
+import {useUser} from '../hooks/ApiHooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button, Card, ListItem} from 'react-native-elements';
+import {Audio, Video} from 'expo-av';
 
 const Single = ({route}) => {
   const {params} = route;
+  const {getUserInfo} = useUser();
+  const [ownerInfo, setOwnerInfo] = useState({username: ''});
+  const [likes, setLikes] = useState([]);
+  const [mylikes, setMyLikes] = useState(false);
+  const videoRef = useRef(null);
+
   console.log('Single', route.params);
+
+  const getOwnerInfo = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      setOwnerInfo(await getUserInfo(params.user_id, token));
+    } catch (e) {
+      console.log('getUserInfo', e.message);
+    }
+  };
+
+  const getLikes = async () => {
+    // TODO: use api hooks to get favourites
+    // setLikes()
+    // set the value of iAmLikingIt
+  };
+
+  useEffect(() => {
+    getOwnerInfo();
+    getLikes();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>{params.title}</Text>
-      <Image
-        style={{width: 200, height: 300}}
-        source={{uri: uploadsUrl + params.filename}}
-      />
-      <Text>{params.description}</Text>
-      <Text>{params.user_id}</Text>
-      <Text>{format(new Date(params.time_added), 'dd.MMMM.yyyy')}</Text>
-      <Text>{params.media_type}</Text>
-    </SafeAreaView>
+    <Card>
+      <Card.Title h4>{params.title}</Card.Title>
+      <Card.Title>
+        {
+          /* TODO: crashes in android with latest Expo GO -> fix
+          {DateTime.fromISO(params.time_added)
+          .setLocale('fi')
+          .toLocaleString({month: 'long', day: 'numeric', year: 'numeric'})} */
+          params.time_added
+        }
+      </Card.Title>
+      <Card.Divider />
+      {params.media_type === 'image' && (
+        <Card.Image
+          source={{uri: uploadsUrl + params.filename}}
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+      )}
+      {params.media_type === 'video' && (
+        <Video
+          ref={videoRef}
+          style={styles.image}
+          source={{uri: uploadsUrl + params.filename}}
+          useNativeControls
+          resizeMode="contain"
+          usePoster
+          posterSource={{uri: uploadsUrl + params.screenshot}}
+        ></Video>
+      )}
+      {params.media_type === 'audio' && (
+        <>
+          <Text>Audio not supported YET.</Text>
+          <Audio></Audio>
+        </>
+      )}
+      <Card.Divider />
+      <Text style={styles.description}>{params.description}</Text>
+      <ListItem>
+        <Text>{ownerInfo.username}</Text>
+      </ListItem>
+      <ListItem>
+        {/* TODO: show like or dislike button depending on the current like status,
+        calculate like count for a file */}
+        {mylikes ? (
+          <Button
+            title="Like"
+            onPress={() => {
+              // use api hooks to POST a favourite
+            }}
+          />
+        ) : (
+          <Button
+            title="Unlike"
+            onPress={() => {
+              // use api hooks to DELETE a favourite
+            }}
+          />
+        )}
+        <Text>Total likes: {likes.length}</Text>
+      </ListItem>
+    </Card>
   );
 };
 

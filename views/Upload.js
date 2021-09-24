@@ -17,14 +17,16 @@ const Upload = ({navigation}) => {
   const {uploadMedia, loading} = useMedia();
   const {addTag} = useTag();
   const {update, setUpdate} = useContext(MainContext);
+  const [filetype, setFiletype] = useState('');
 
   const doUpload = async () => {
     try {
       const filename = image.uri.split('/').pop();
       // Infer the type of the image
       const match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
+      let type = match ? `${filetype}/${match[1]}` : filetype;
       if (type === 'image/jpg') type = 'image/jpeg';
+      console.log('doUpload mimetype:', type);
       const formData = new FormData();
       formData.append('file', {uri: image.uri, name: filename, type});
       formData.append('title', inputs.title);
@@ -81,6 +83,7 @@ const Upload = ({navigation}) => {
 
     if (!result.cancelled) {
       setImage({uri: result.uri});
+      setFiletype(result.type);
     }
   };
 

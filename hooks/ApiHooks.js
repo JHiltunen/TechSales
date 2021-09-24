@@ -97,6 +97,19 @@ const useUser = () => {
     }
   };
 
+  const getUserInfo = async (userid, token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const userInfo = await doFetch(baseUrl + 'users/' + userid, options);
+      return userInfo;
+    } catch (error) {
+      console.log('checkToken error', error);
+    }
+  };
+
   const checkUsernameAvailable = async (username) => {
     try {
       const usernameInfo = await doFetch(
@@ -122,7 +135,7 @@ const useUser = () => {
     }
   };
 
-  return {checkToken, register, checkUsernameAvailable};
+  return {checkToken, register, checkUsernameAvailable}, getUserInfo;
 };
 
 const useTag = () => {
@@ -158,4 +171,29 @@ const useTag = () => {
   return {getFilesByTag, addTag};
 };
 
-export {useMedia, useLogin, useUser, useTag};
+const useFavourites = () => {
+  const addFavourite = async (fileId, token) => {
+    // post /favourites
+  };
+
+  const deleteFavourite = async (fileId, token) => {
+    // DELETE /favourites/file/:id
+  };
+
+  const getFavouritesByFileId = async (fileId) => {
+    // get /favourites/file/:id
+  };
+
+  const getMyFavourites = (token) => {
+    // GET /favourites
+  };
+
+  return {
+    addFavourite,
+    deleteFavourite,
+    getFavouritesByFileId,
+    getMyFavourites,
+  };
+};
+
+export {useMedia, useLogin, useUser, useTag, useFavourites};
