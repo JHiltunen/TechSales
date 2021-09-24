@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react';
+import {StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView} from 'react-native';
 import PropTypes from 'prop-types';
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {useUser} from '../hooks/ApiHooks';
+import {
+  Card,
+  ListItem,
+  Text,
+  Button,
+  Icon,
+  Avatar,
+} from 'react-native-elements';
+import {Video, Audio} from 'expo-av';
+import {useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Button, Card, Icon, ListItem} from 'react-native-elements';
-import {Audio, Video} from 'expo-av';
 import {formatDate} from '../utils/dateFunctions';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
@@ -23,6 +24,8 @@ const Single = ({route}) => {
   const [mylikes, setMyLikes] = useState(false);
   const [videoRef, setVideoRef] = useState(null);
   const [disabled, setDisabled] = useState(false);
+  const {getFilesByTag} = useTag();
+  const [avatar, setAvatar] = useState('http://placekitten.com/100');
 
   const handleVideoRef = (component) => {
     setVideoRef(component);
@@ -86,9 +89,21 @@ const Single = ({route}) => {
     // set the value of iAmLikingIt
   };
 
+  const getAvatar = async () => {
+    try {
+      const avatarList = await getFilesByTag('avatar_' + params.user_id);
+      if (avatarList.length > 0) {
+        setAvatar(uploadsUrl + avatarList.pop().filename);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   useEffect(() => {
     getOwnerInfo();
     getLikes();
+    getAvatar();
   }, []);
 
   return (
@@ -147,6 +162,7 @@ const Single = ({route}) => {
         <Card.Divider />
         <Text style={styles.description}>{params.description}</Text>
         <ListItem>
+          <Avatar source={{uri: avatar}} />
           <Text>{ownerInfo.username}</Text>
         </ListItem>
         <ListItem>
