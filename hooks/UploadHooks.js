@@ -15,9 +15,16 @@ const useUploadForm = (callback) => {
       };
     });
   };
+  const reset = () => {
+    setInputs({
+      title: '',
+      description: '',
+    });
+  };
   return {
     handleInputChange,
     inputs,
+    reset,
   };
 };
 

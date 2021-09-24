@@ -13,23 +13,23 @@ import {MainContext} from '../contexts/MainContext';
 const Upload = ({navigation}) => {
   // eslint-disable-next-line no-undef
   const [image, setImage] = useState(require('../assets/icon.png'));
-  const {inputs, handleInputChange} = useUploadForm();
+  const {inputs, handleInputChange, reset} = useUploadForm();
   const {uploadMedia, loading} = useMedia();
   const {addTag} = useTag();
   const {update, setUpdate} = useContext(MainContext);
 
   const doUpload = async () => {
-    const filename = image.uri.split('/').pop();
-    // Infer the type of the image
-    const match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    if (type === 'image/jpg') type = 'image/jpeg';
-    const formData = new FormData();
-    formData.append('file', {uri: image.uri, name: filename, type});
-    formData.append('title', inputs.title);
-    formData.append('description', inputs.description);
-    // console.log('doUpload', formData);
     try {
+      const filename = image.uri.split('/').pop();
+      // Infer the type of the image
+      const match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      if (type === 'image/jpg') type = 'image/jpeg';
+      const formData = new FormData();
+      formData.append('file', {uri: image.uri, name: filename, type});
+      formData.append('title', inputs.title);
+      formData.append('description', inputs.description);
+
       const userToken = await AsyncStorage.getItem('userToken');
       const result = await uploadMedia(formData, userToken);
       console.log('doUpload', result);
@@ -44,7 +44,7 @@ const Upload = ({navigation}) => {
               text: 'Ok',
               onPress: () => {
                 setUpdate(update + 1);
-                // doReset();
+                doReset();
                 navigation.navigate('Home');
               },
             },
@@ -83,6 +83,12 @@ const Upload = ({navigation}) => {
       setImage({uri: result.uri});
     }
   };
+
+  const doReset = () => {
+    setImage(null);
+    reset();
+  };
+
   return (
     <View>
       <Image source={image} style={{width: '100%', height: 200}} />
@@ -93,6 +99,7 @@ const Upload = ({navigation}) => {
         handleInputChange={handleInputChange}
         loading={loading}
       />
+      <Button raised title={'Reset'} onPress={doReset} />
     </View>
   );
 };
