@@ -9,25 +9,27 @@ const useMedia = (ownFiles) => {
   const {update, user} = useContext(MainContext);
 
   useEffect(() => {
+    // https://scriptverse.academy/tutorials/js-self-invoking-functions.html
     (async () => {
       setMediaArray(await loadMedia());
+      // console.log('useMedia useEffect', mediaArray);
     })();
   }, [update]);
 
   const loadMedia = async () => {
     try {
-      let mediaWhitOutThumbnail = await useTag().getFilesByTag(appID);
+      let mediaIlmanThumbnailia = await useTag().getFilesByTag(appID);
 
       if (ownFiles) {
-        mediaWhitOutThumbnail = mediaWhitOutThumbnail.filter(
+        mediaIlmanThumbnailia = mediaIlmanThumbnailia.filter(
           (item) => item.user_id === user.user_id
         );
       }
 
-      const allfiles = mediaWhitOutThumbnail.map(async (media) => {
+      const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
-      return Promise.all(allfiles);
+      return Promise.all(kaikkiTiedot);
     } catch (e) {
       console.log('loadMedia', e.message);
     }
@@ -118,6 +120,7 @@ const useLogin = () => {
   const login = async (userCredentials) => {
     const requestOptions = {
       method: 'POST',
+      // mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(userCredentials),
     };
@@ -144,7 +147,6 @@ const useUser = () => {
       console.log('checkToken error', error);
     }
   };
-
   const getUserInfo = async (userId, token) => {
     const options = {
       method: 'GET',
@@ -172,16 +174,18 @@ const useUser = () => {
   };
 
   const register = async (userCredentials) => {
+    // https://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser
     const requestOptions = {
       method: 'POST',
+      // mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(userCredentials),
     };
     try {
       const registerResponse = await doFetch(baseUrl + 'users', requestOptions);
       return registerResponse;
-    } catch (e) {
-      console.log('register error', e.message);
+    } catch (error) {
+      console.log('register error', error.message);
     }
   };
 
@@ -209,11 +213,13 @@ const useTag = () => {
       },
       body: JSON.stringify({file_id, tag}),
     };
+    // console.log('optiot', options);
     try {
       const tagInfo = await doFetch(baseUrl + 'tags', options);
       return tagInfo;
-    } catch (e) {
-      throw new Error(e.message);
+    } catch (error) {
+      // console.log('addTag error', error);
+      throw new Error(error.message);
     }
   };
 

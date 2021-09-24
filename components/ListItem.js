@@ -24,7 +24,12 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
         <Text>{singleMedia.description}</Text>
         {showButtons && (
           <>
-            <Button title="Modify" />
+            <Button
+              title="Modify"
+              onPress={() => {
+                navigation.navigate('Modify', {singleMedia, navigation});
+              }}
+            />
             <Button title="Delete" />
           </>
         )}

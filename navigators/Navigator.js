@@ -10,6 +10,7 @@ import {MainContext} from '../contexts/MainContext';
 import {Icon} from 'react-native-elements';
 import Upload from '../views/Upload';
 import MyFiles from '../views/MyFiles';
+import Modify from '../views/Modify';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,6 +58,7 @@ const StackScreen = () => {
           />
           <Stack.Screen name="Single" component={Single} />
           <Stack.Screen name="My Files" component={MyFiles} />
+          <Stack.Screen name="Modify" component={Modify} />
         </>
       ) : (
         <>

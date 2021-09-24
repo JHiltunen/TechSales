@@ -13,11 +13,20 @@ import {MainContext} from '../contexts/MainContext';
 const Upload = ({navigation}) => {
   // eslint-disable-next-line no-undef
   const [image, setImage] = useState(require('../assets/icon.png'));
-  const {inputs, handleInputChange, reset} = useUploadForm();
+  const {inputs, handleInputChange, reset, setInputs} = useUploadForm();
   const {uploadMedia, loading} = useMedia();
   const {addTag} = useTag();
   const {update, setUpdate} = useContext(MainContext);
   const [filetype, setFiletype] = useState('');
+
+  const resetForm = () => {
+    setInputs({
+      title: '',
+      description: '',
+    });
+    // eslint-disable-next-line no-undef
+    setImage(require('../assets/icon.png'));
+  };
 
   const doUpload = async () => {
     try {
@@ -47,6 +56,7 @@ const Upload = ({navigation}) => {
               onPress: () => {
                 setUpdate(update + 1);
                 doReset();
+                resetForm();
                 navigation.navigate('Home');
               },
             },
@@ -101,8 +111,9 @@ const Upload = ({navigation}) => {
         handleSubmit={doUpload}
         handleInputChange={handleInputChange}
         loading={loading}
+        inputs={inputs}
       />
-      <Button raised title={'Reset'} onPress={doReset} />
+      <Button title="Reset form" onPress={resetForm} />
     </View>
   );
 };

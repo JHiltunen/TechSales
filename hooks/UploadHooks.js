@@ -25,6 +25,7 @@ const useUploadForm = (callback) => {
     handleInputChange,
     inputs,
     reset,
+    setInputs,
   };
 };
 
