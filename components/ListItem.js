@@ -1,11 +1,17 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {Avatar, Button} from 'react-native-elements';
+import {
+  Avatar,
+  Button,
+  Card,
+  ListItem as RNEListItem,
+} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {timeSince} from '../utils/dateFunctions';
 
 const ListItem = ({singleMedia, navigation, showButtons}) => {
   const {update, setUpdate} = useContext(MainContext);
@@ -18,15 +24,22 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
       }}
     >
       <Avatar
-        style={styles.image}
         size="large"
         square
         source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
       ></Avatar>
 
-      <View style={styles.textbox}>
-        <Text style={styles.listTitle}>{singleMedia.title}</Text>
-        <Text>{singleMedia.description}</Text>
+      <RNEListItem.Content style={styles.Content}>
+        <RNEListItem.Title numberOfLines={1} h4>
+          {singleMedia.title}
+        </RNEListItem.Title>
+        <RNEListItem.Subtitle numberOfLines={1}>
+          {singleMedia.description}
+        </RNEListItem.Subtitle>
+        <Card.Divider />
+        <RNEListItem.Subtitle numberOfLines={1}>
+          {timeSince(singleMedia.time_added)}
+        </RNEListItem.Subtitle>
         {showButtons && (
           <>
             <Button
@@ -55,7 +68,8 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
             />
           </>
         )}
-      </View>
+      </RNEListItem.Content>
+      <RNEListItem.Chevron />
     </TouchableOpacity>
   );
 };
@@ -66,28 +80,9 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 5,
     backgroundColor: '#eee',
-    borderRadius: 6,
-    flex: 1,
   },
-
-  imagebox: {
-    flex: 1,
-  },
-
-  image: {
-    flex: 1,
-    borderRadius: 6,
-  },
-
-  textbox: {
-    flex: 2,
-    padding: 10,
-  },
-
-  listTitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingBottom: 15,
+  Content: {
+    marginLeft: 20,
   },
 });
 

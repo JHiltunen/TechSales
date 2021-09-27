@@ -20,10 +20,6 @@ const Home = ({navigation}) => {
   );
 };
 
-Home.propTypes = {
-  navigation: PropTypes.object.isRequired,
-};
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
@@ -35,5 +31,9 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
 });
+
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 export default Home;

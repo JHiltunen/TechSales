@@ -106,21 +106,12 @@ const Single = ({route}) => {
   return (
     <Card>
       <ListItem>
-        {params.media_type === 'image' && <Icon name="image" type="ionicon" />}
-        {params.media_type === 'video' && (
-          <Icon name="videocam" type="ionicon" />
-        )}
-        <ListItem.Content>
-          <ListItem.Title>{params.title}</ListItem.Title>
-          <ListItem.Subtitle>
-            {formatDate(new Date(params.time_added), 'eeee d. MMMM y')}
-          </ListItem.Subtitle>
-          <ListItem.Subtitle>
-            klo {formatDate(new Date(params.time_added), 'HH.mm')}
-          </ListItem.Subtitle>
-        </ListItem.Content>
+        <Avatar source={{uri: avatar}} />
+        <Text>{ownerInfo.username}</Text>
       </ListItem>
       <Card.Divider />
+      <ListItem.Title style={styles.title}>{params.title}</ListItem.Title>
+
       {params.media_type === 'image' && (
         <Card.Image
           source={{uri: uploadsUrl + params.filename}}
@@ -153,12 +144,23 @@ const Single = ({route}) => {
           <Audio></Audio>
         </>
       )}
-      <Card.Divider />
-      <Text style={styles.description}>{params.description}</Text>
       <ListItem>
-        <Avatar source={{uri: avatar}} />
-        <Text>{ownerInfo.username}</Text>
+        {params.media_type === 'image' && (
+          <Icon name="image-outline" type="ionicon" />
+        )}
+        {params.media_type === 'video' && (
+          <Icon name="videocam-outline" type="ionicon" />
+        )}
+        <ListItem.Content>
+          <ListItem.Subtitle style={styles.date}>
+            {formatDate(new Date(params.time_added), 'eee d. MMM y')} klo.
+            {formatDate(new Date(params.time_added), 'HH.mm')}
+          </ListItem.Subtitle>
+        </ListItem.Content>
       </ListItem>
+      <Text style={styles.description}>{params.description}</Text>
+      <Card.Divider />
+
       <ListItem>
         {/* TODO: show like or dislike button depending on the current like status,
         calculate like count for a file */}
@@ -187,10 +189,22 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: undefined,
-    aspectRatio: 1,
+    aspectRatio: 1.5,
   },
   description: {
+    marginBottom: 20,
+    marginLeft: 10,
+    textAlign: 'center',
+  },
+  title: {
     marginBottom: 10,
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  date: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
