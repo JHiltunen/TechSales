@@ -7,6 +7,7 @@ import {useUser} from '../hooks/ApiHooks';
 import RegisterForm from '../components/RegisterForm';
 import LoginForm from '../components/LoginForm';
 import {Card, ListItem, Text} from 'react-native-elements';
+import {StatusBar} from 'expo-status-bar';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -38,6 +39,7 @@ const Login = ({navigation}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
+      <StatusBar barStyle="dark-content" hidden={false} />
       {registerFormToggle ? (
         <Card>
           <Card.Title h4>Register</Card.Title>
