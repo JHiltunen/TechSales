@@ -15,9 +15,13 @@ const Home = ({navigation}) => {
       <View style={styles.container}>
         <List navigation={navigation} />
       </View>
-      <StatusBar style="auto" />
+      <StatusBar barStyle="dark-content" hidden={false} />
     </SafeAreaView>
   );
+};
+
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -31,9 +35,5 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
 });
-
-Home.propTypes = {
-  navigation: PropTypes.object.isRequired,
-};
 
 export default Home;
