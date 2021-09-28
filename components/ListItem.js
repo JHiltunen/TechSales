@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     padding: 15,
-    marginBottom: 5,
-    backgroundColor: '#BBC7D0',
+    marginBottom: 2,
+    backgroundColor: '#EFD5C3',
   },
   Content: {
     marginLeft: 20,

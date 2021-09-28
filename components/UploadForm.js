@@ -25,7 +25,12 @@ const UploadForm = ({
         value={inputs.description}
       />
 
-      <Button raised title={title} onPress={handleSubmit} loading={loading} />
+      <Button
+        title={title}
+        type="clear"
+        onPress={handleSubmit}
+        loading={loading}
+      />
     </>
   );
 };
