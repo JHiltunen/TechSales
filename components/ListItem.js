@@ -16,6 +16,7 @@ import {timeSince} from '../utils/dateFunctions';
 const ListItem = ({singleMedia, navigation, showButtons}) => {
   const {update, setUpdate} = useContext(MainContext);
   const {deleteMedia} = useMedia();
+  const allData = JSON.parse(singleMedia.description);
   return (
     <TouchableOpacity
       style={styles.row}
@@ -34,7 +35,7 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
           {singleMedia.title}
         </RNEListItem.Title>
         <RNEListItem.Subtitle numberOfLines={1}>
-          {singleMedia.description}
+          {allData.description}
         </RNEListItem.Subtitle>
         <Card.Divider />
         <RNEListItem.Subtitle numberOfLines={1}>

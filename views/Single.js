@@ -26,6 +26,7 @@ const Single = ({route}) => {
   const [disabled, setDisabled] = useState(false);
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
+  const allData = JSON.parse(params.description);
 
   // screen orientation, show video in fullscreen when landscape
   const handleVideoRef = (component) => {
@@ -158,7 +159,7 @@ const Single = ({route}) => {
           </ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
-      <Text style={styles.description}>{params.description}</Text>
+      <Text style={styles.description}>{allData.description}</Text>
       <Card.Divider />
 
       <ListItem>
