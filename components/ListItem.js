@@ -30,45 +30,54 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
         source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
       ></Avatar>
 
-      <RNEListItem.Content style={styles.Content}>
-        <RNEListItem.Title numberOfLines={1} h4>
-          {singleMedia.title}
-        </RNEListItem.Title>
-        <RNEListItem.Subtitle numberOfLines={1}>
-          {allData.description}
-        </RNEListItem.Subtitle>
-        <Card.Divider />
-        <RNEListItem.Subtitle numberOfLines={1}>
-          {timeSince(singleMedia.time_added)}
-        </RNEListItem.Subtitle>
-        {showButtons && (
-          <>
-            <Button
-              title="Modify"
-              onPress={() => {
-                navigation.navigate('Modify', {singleMedia, navigation});
-              }}
-            />
-            <Button
-              title="Delete"
-              onPress={async () => {
-                try {
-                  const token = await AsyncStorage.getItem('userToken');
-                  const response = await deleteMedia(
-                    singleMedia.file_id,
-                    token
-                  );
-                  console.log('Delete', response);
-                  if (response.message) {
-                    setUpdate(update + 1);
+      <RNEListItem.Content style={styles.container}>
+        <RNEListItem.Content style={styles.details}>
+          <RNEListItem.Title numberOfLines={1} h4>
+            {singleMedia.title}
+          </RNEListItem.Title>
+          <RNEListItem.Subtitle numberOfLines={1}>
+            {allData.description}
+          </RNEListItem.Subtitle>
+          <RNEListItem.Subtitle numberOfLines={1}>
+            {timeSince(singleMedia.time_added)}
+          </RNEListItem.Subtitle>
+          {showButtons && (
+            <>
+              <Button
+                title="Modify"
+                onPress={() => {
+                  navigation.navigate('Modify', {singleMedia, navigation});
+                }}
+              />
+              <Button
+                title="Delete"
+                onPress={async () => {
+                  try {
+                    const token = await AsyncStorage.getItem('userToken');
+                    const response = await deleteMedia(
+                      singleMedia.file_id,
+                      token
+                    );
+                    console.log('Delete', response);
+                    if (response.message) {
+                      setUpdate(update + 1);
+                    }
+                  } catch (e) {
+                    console.log('ListItem, delete: ', e.message);
                   }
-                } catch (e) {
-                  console.log('ListItem, delete: ', e.message);
-                }
-              }}
-            />
-          </>
-        )}
+                }}
+              />
+            </>
+          )}
+        </RNEListItem.Content>
+        <RNEListItem.Content style={styles.info}>
+          <RNEListItem.Subtitle style={styles.condition}>
+            {allData.condition}
+          </RNEListItem.Subtitle>
+          <RNEListItem.Subtitle style={styles.price}>
+            {allData.price} €
+          </RNEListItem.Subtitle>
+        </RNEListItem.Content>
       </RNEListItem.Content>
       <RNEListItem.Chevron />
     </TouchableOpacity>
@@ -82,8 +91,25 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     backgroundColor: '#EFD5C3',
   },
-  Content: {
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  details: {
     marginLeft: 20,
+  },
+  info: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  condition: {
+    fontSize: 15,
+    padding: 5,
+  },
+  price: {
+    fontSize: 15,
+    padding: 5,
   },
 });
 
