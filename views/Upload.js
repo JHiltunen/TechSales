@@ -23,6 +23,8 @@ const Upload = ({navigation}) => {
     setInputs({
       title: '',
       description: '',
+      condition: '',
+      price: '0.00',
     });
     // eslint-disable-next-line no-undef
     setImage(require('../assets/icon.png'));
@@ -36,10 +38,17 @@ const Upload = ({navigation}) => {
       let type = match ? `${filetype}/${match[1]}` : filetype;
       if (type === 'image/jpg') type = 'image/jpeg';
       console.log('doUpload mimetype:', type);
+
+      const moreData = {
+        description: inputs.description,
+        condition: inputs.condition,
+        price: inputs.price,
+      };
+
       const formData = new FormData();
       formData.append('file', {uri: image.uri, name: filename, type});
       formData.append('title', inputs.title);
-      formData.append('description', inputs.description);
+      formData.append('description', JSON.stringify(moreData));
 
       const userToken = await AsyncStorage.getItem('userToken');
       const result = await uploadMedia(formData, userToken);
