@@ -165,22 +165,22 @@ const Single = ({route}) => {
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
-        <ListItem>
-          <ListItem.Title>Description:</ListItem.Title>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.descTitle}>Description:</ListItem.Title>
           <ListItem.Content>
-            <Text>{allData.description}</Text>
+            <Text style={styles.text}>{allData.description}</Text>
           </ListItem.Content>
         </ListItem>
         <ListItem>
           <ListItem.Title>Condition:</ListItem.Title>
           <ListItem.Content>
-            <Text>{allData.condition}</Text>
+            <Text style={styles.text}>{allData.condition}</Text>
           </ListItem.Content>
         </ListItem>
         <ListItem>
           <ListItem.Title>Price:</ListItem.Title>
           <ListItem.Content>
-            <Text>{allData.price} €</Text>
+            <Text style={styles.text}>{allData.price} €</Text>
           </ListItem.Content>
         </ListItem>
         <Card.Divider />
@@ -211,6 +211,18 @@ const Single = ({route}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'flex-start',
+    backgroundColor: 'red',
+  },
+  descTitle: {
+    alignSelf: 'flex-start',
+  },
+  text: {
+    fontSize: 14,
+  },
   image: {
     width: '100%',
     height: undefined,
