@@ -6,8 +6,8 @@ const constraints = {
   username: {
     presence: true,
     length: {
-      minimum: 3,
-      message: 'must be at least 3 chars',
+      minimum: 4,
+      message: 'must be at least 4 characters',
     },
   },
   password: {
@@ -29,12 +29,12 @@ const constraints = {
       message: 'must be a valid email address',
     },
   },
-  full_name: {
+  /*   full_name: {
     length: {
-      minimum: 3,
-      message: 'must be at least 3 chars',
+      minimum: 10,
+      message: 'must be at least 10 characters',
     },
-  },
+  }, */
 };
 
 const useSignUpForm = (callback) => {

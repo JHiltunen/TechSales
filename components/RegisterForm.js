@@ -67,7 +67,7 @@ const RegisterForm = ({navigation}) => {
         }}
         errorMessage={errors.email}
       />
-      <Input
+      {/*       <Input
         autoCapitalize="none"
         placeholder="full name"
         onChangeText={(txt) => handleInputChange('full_name', txt)}
@@ -75,7 +75,7 @@ const RegisterForm = ({navigation}) => {
           handleOnEndEditing('full_name', event.nativeEvent.text);
         }}
         errorMessage={errors.full_name}
-      />
+      /> */}
 
       <Button
         title="Register!"

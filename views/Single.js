@@ -153,7 +153,7 @@ const Single = ({route}) => {
         )}
         <ListItem.Content>
           <ListItem.Subtitle style={styles.date}>
-            {formatDate(new Date(params.time_added), 'eee d. MMM y')} klo.
+            {formatDate(new Date(params.time_added), 'eee d. MMMM y')} Clk.
             {formatDate(new Date(params.time_added), 'HH.mm')}
           </ListItem.Subtitle>
         </ListItem.Content>

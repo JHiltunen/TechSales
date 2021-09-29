@@ -15,7 +15,14 @@ const Home = ({navigation}) => {
       <View style={styles.container}>
         <List navigation={navigation} />
       </View>
-      <StatusBar barStyle="dark-content" hidden={false} />
+      <View>
+        <StatusBar
+          animated={true}
+          // backgroundColor="#EFD5C3"
+          barStyle="dark-content"
+          hidden={false}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -32,7 +39,7 @@ const styles = StyleSheet.create({
   droidSafeArea: {
     flex: 1,
     backgroundColor: '#ccc',
-    paddingTop: Platform.OS === 'android' ? 30 : 0,
+    paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
 });
 
