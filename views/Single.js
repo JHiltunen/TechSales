@@ -166,20 +166,20 @@ const Single = ({route}) => {
           </ListItem.Content>
         </ListItem>
         <ListItem style={styles.container}>
-          <ListItem.Title style={styles.descTitle}>Description:</ListItem.Title>
-          <ListItem.Content>
+          <ListItem.Title style={styles.listItemTitle}>Description:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
             <Text style={styles.text}>{allData.description}</Text>
           </ListItem.Content>
         </ListItem>
-        <ListItem>
-          <ListItem.Title>Condition:</ListItem.Title>
-          <ListItem.Content>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.listItemTitle}>Condition:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
             <Text style={styles.text}>{allData.condition}</Text>
           </ListItem.Content>
         </ListItem>
-        <ListItem>
-          <ListItem.Title>Price:</ListItem.Title>
-          <ListItem.Content>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.listItemTitle}>Price:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
             <Text style={styles.text}>{allData.price} €</Text>
           </ListItem.Content>
         </ListItem>
@@ -217,8 +217,12 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     backgroundColor: 'red',
   },
-  descTitle: {
+  listItemTitle: {
     alignSelf: 'flex-start',
+    flex: 1,
+  },
+  listItemContent: {
+    flex: 2,
   },
   text: {
     fontSize: 14,
