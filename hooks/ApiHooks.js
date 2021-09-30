@@ -226,4 +226,75 @@ const useTag = () => {
   return {getFilesByTag, addTag};
 };
 
-export {useMedia, useLogin, useUser, useTag};
+const useFavourites = () => {
+  const addFavourite = async (fileId, token) => {
+    const options = {
+      method: 'POST',
+      headers: {'x-access-token': token, 'Content-type': 'application/json'},
+      body: JSON.stringify({
+        file_id: fileId,
+      }),
+    };
+
+    try {
+      const addFavourite = await doFetch(baseUrl + 'favourites', options);
+      console.log('Body: ', options.body);
+      return addFavourite;
+    } catch (e) {
+      console.log('addFavourite error', e.message);
+    }
+  };
+
+  const deleteFavourite = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const deleteFavourite = await doFetch(
+        baseUrl + 'favourites/file/' + fileId,
+        options
+      );
+      return deleteFavourite;
+    } catch (error) {
+      console.log('deleteFavourite error', error);
+    }
+  };
+
+  const getFavouritesByFileId = async (fileId) => {
+    const options = {
+      method: 'GET',
+    };
+    try {
+      const favouritesByFileId = await doFetch(
+        baseUrl + 'favourites/file/' + fileId,
+        options
+      );
+      return favouritesByFileId;
+    } catch (error) {
+      console.log('checkToken error', error);
+    }
+  };
+
+  const getMyFavourites = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const myFavourites = await doFetch(baseUrl + 'favourites', options);
+      return myFavourites;
+    } catch (error) {
+      console.log('checkToken error', error);
+    }
+  };
+
+  return {
+    addFavourite,
+    deleteFavourite,
+    getFavouritesByFileId,
+    getMyFavourites,
+  };
+};
+
+export {useMedia, useLogin, useUser, useTag, useFavourites};
