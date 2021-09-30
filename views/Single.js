@@ -20,6 +20,7 @@ import {useFavourites, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {formatDate} from '../utils/dateFunctions';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 const Single = ({route}) => {
   const {params} = route;
@@ -213,8 +214,10 @@ const Single = ({route}) => {
           {/* TODO: show like or dislike button depending on the current like status,
           calculate like count for a file */}
           {!iAmLikingIt ? (
-            <Button
-              title="Like"
+            <AntIcon
+              name="hearto"
+              color="black"
+              size={25}
               onPress={async () => {
                 const token = await AsyncStorage.getItem('userToken');
                 const likePost = await addFavourite(params.file_id, token);
@@ -225,8 +228,10 @@ const Single = ({route}) => {
               }}
             />
           ) : (
-            <Button
-              title="Unlike"
+            <AntIcon
+              name="heart"
+              color="red"
+              size={25}
               onPress={async () => {
                 const token = await AsyncStorage.getItem('userToken');
                 const dontLikePost = await deleteFavourite(
@@ -240,7 +245,7 @@ const Single = ({route}) => {
               }}
             />
           )}
-          <Text>Total likes: {likes.length}</Text>
+          <Text>Likes: {likes.length}</Text>
         </ListItem>
       </Card>
     </ScrollView>
