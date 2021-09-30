@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
-import {View, Platform, Alert, ScrollView, StyleSheet} from 'react-native';
+import {View, Platform, Alert, ScrollView, StyleSheet, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback} from 'react-native';
 import UploadForm from '../components/UploadForm';
 import {Button, Card, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
@@ -113,30 +113,40 @@ const Upload = ({navigation}) => {
 
   return (
     <ScrollView>
-      <Card style={styles.card}>
-        <View>
-          <Image source={image} style={{width: '100%', height: 200}} />
-          <Button
-            style={{margin: 20}}
-            title="Select media"
-            type="clear"
-            onPress={pickImage}
-          />
-          <UploadForm
-            title="Upload"
-            handleSubmit={doUpload}
-            handleInputChange={handleInputChange}
-            loading={loading}
-            inputs={inputs}
-          />
-          <Button
-            style={{margin: 10}}
-            title="Reset form"
-            type="clear"
-            onPress={resetForm}
-          />
-        </View>
-      </Card>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <View style={styles.btnContainer}></View>
+          </View>
+        </TouchableWithoutFeedback>
+        <Card style={styles.card}>
+          <View>
+            <Image source={image} style={{width: '100%', height: 200}} />
+            <Button
+              style={{margin: 20}}
+              title="Select media"
+              type="clear"
+              onPress={pickImage}
+            />
+            <UploadForm
+              title="Upload"
+              handleSubmit={doUpload}
+              handleInputChange={handleInputChange}
+              loading={loading}
+              inputs={inputs}
+            />
+            <Button
+              style={{margin: 10}}
+              title="Reset form"
+              type="clear"
+              onPress={resetForm}
+            />
+          </View>
+        </Card>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
