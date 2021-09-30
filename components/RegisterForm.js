@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Alert, View} from 'react-native';
 import useSignUpForm from '../hooks/RegisterHooks';
-import {Button, Input} from 'react-native-elements';
+import {Button, Input, Text} from 'react-native-elements';
 import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = ({navigation}) => {
@@ -24,9 +24,12 @@ const RegisterForm = ({navigation}) => {
 
   return (
     <View>
+      <Text style={{textAlign: 'center', color: 'red'}}>
+        * Mandatory fields
+      </Text>
       <Input
         autoCapitalize="none"
-        placeholder="username"
+        placeholder="username *"
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(event) => {
           console.log('onEndEditing value', event.nativeEvent.text);
@@ -37,7 +40,7 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="password"
+        placeholder="password *"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
         onEndEditing={(event) => {
@@ -47,7 +50,7 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="confirm password"
+        placeholder="confirm password *"
         onChangeText={(txt) => handleInputChange('confirmPassword', txt)}
         secureTextEntry={true}
         onEndEditing={(event) => {
@@ -57,7 +60,7 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="email"
+        placeholder="email *"
         onChangeText={(txt) => handleInputChange('email', txt)}
         onEndEditing={(event) => {
           handleOnEndEditing('email', event.nativeEvent.text);
@@ -73,6 +76,7 @@ const RegisterForm = ({navigation}) => {
         }}
         errorMessage={errors.full_name}
       />
+
       <Button
         title="Register!"
         onPress={doRegister}

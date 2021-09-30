@@ -54,6 +54,7 @@ const StackScreen = () => {
             component={TabScreen}
             options={{
               headerShown: false,
+              headerStyle: '#A3ABBB',
             }}
           />
           <Stack.Screen name="Single" component={Single} />

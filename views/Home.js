@@ -15,7 +15,7 @@ const Home = ({navigation}) => {
       <View style={styles.container}>
         <List navigation={navigation} />
       </View>
-      <StatusBar style="auto" />
+      <StatusBar barStyle="dark-content" hidden={false} />
     </SafeAreaView>
   );
 };

@@ -4,6 +4,8 @@ const useUploadForm = (callback) => {
   const [inputs, setInputs] = useState({
     title: '',
     description: '',
+    condition: '',
+    price: '0.00',
   });
 
   const handleInputChange = (name, text) => {
@@ -19,6 +21,8 @@ const useUploadForm = (callback) => {
     setInputs({
       title: '',
       description: '',
+      condition: '',
+      price: '0.00',
     });
   };
   return {

@@ -1,15 +1,22 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {Avatar, Button} from 'react-native-elements';
+import {
+  Avatar,
+  Button,
+  Card,
+  ListItem as RNEListItem,
+} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {timeSince} from '../utils/dateFunctions';
 
 const ListItem = ({singleMedia, navigation, showButtons}) => {
   const {update, setUpdate} = useContext(MainContext);
   const {deleteMedia} = useMedia();
+  const allData = JSON.parse(singleMedia.description);
   return (
     <TouchableOpacity
       style={styles.row}
@@ -18,44 +25,61 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
       }}
     >
       <Avatar
-        style={styles.image}
         size="large"
         square
         source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
       ></Avatar>
 
-      <View style={styles.textbox}>
-        <Text style={styles.listTitle}>{singleMedia.title}</Text>
-        <Text>{singleMedia.description}</Text>
-        {showButtons && (
-          <>
-            <Button
-              title="Modify"
-              onPress={() => {
-                navigation.navigate('Modify', {singleMedia, navigation});
-              }}
-            />
-            <Button
-              title="Delete"
-              onPress={async () => {
-                try {
-                  const token = await AsyncStorage.getItem('userToken');
-                  const response = await deleteMedia(
-                    singleMedia.file_id,
-                    token
-                  );
-                  console.log('Delete', response);
-                  if (response.message) {
-                    setUpdate(update + 1);
+      <RNEListItem.Content style={styles.container}>
+        <RNEListItem.Content style={styles.details}>
+          <RNEListItem.Title numberOfLines={1} h4>
+            {singleMedia.title}
+          </RNEListItem.Title>
+          <RNEListItem.Subtitle numberOfLines={1}>
+            {allData.description}
+          </RNEListItem.Subtitle>
+          <RNEListItem.Subtitle numberOfLines={1}>
+            {timeSince(singleMedia.time_added)}
+          </RNEListItem.Subtitle>
+          {showButtons && (
+            <>
+              <Button
+                title="Modify"
+                onPress={() => {
+                  navigation.navigate('Modify', {singleMedia, navigation});
+                }}
+              />
+              <Button
+                title="Delete"
+                onPress={async () => {
+                  try {
+                    const token = await AsyncStorage.getItem('userToken');
+                    const response = await deleteMedia(
+                      singleMedia.file_id,
+                      token
+                    );
+                    console.log('Delete', response);
+                    if (response.message) {
+                      setUpdate(update + 1);
+                    }
+                  } catch (e) {
+                    console.log('ListItem, delete: ', e.message);
                   }
-                } catch (e) {
-                  console.log('ListItem, delete: ', e.message);
-                }
-              }}
-            />
-          </>
-        )}
-      </View>
+                }}
+              />
+            </>
+          )}
+        </RNEListItem.Content>
+        <RNEListItem.Content style={styles.info}>
+          <RNEListItem.Subtitle style={styles.condition}>
+            {allData.condition}
+          </RNEListItem.Subtitle>
+          <RNEListItem.Subtitle style={styles.price}>
+            {allData.price} €
+          </RNEListItem.Subtitle>
+        </RNEListItem.Content>
+      </RNEListItem.Content>
+      <RNEListItem.Chevron />
     </TouchableOpacity>
   );
 };
@@ -64,30 +88,28 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     padding: 15,
-    marginBottom: 5,
-    backgroundColor: '#eee',
-    borderRadius: 6,
-    flex: 1,
+    marginBottom: 2,
+    backgroundColor: '#EFD5C3',
   },
-
-  imagebox: {
-    flex: 1,
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-
-  image: {
-    flex: 1,
-    borderRadius: 6,
+  details: {
+    marginLeft: 20,
   },
-
-  textbox: {
-    flex: 2,
-    padding: 10,
+  info: {
+    display: 'flex',
+    alignItems: 'center',
   },
-
-  listTitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingBottom: 15,
+  condition: {
+    fontSize: 15,
+    padding: 5,
+  },
+  price: {
+    fontSize: 15,
+    padding: 5,
   },
 });
 

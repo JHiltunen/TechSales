@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {
@@ -26,6 +31,7 @@ const Single = ({route}) => {
   const [disabled, setDisabled] = useState(false);
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
+  const allData = JSON.parse(params.description);
 
   // screen orientation, show video in fullscreen when landscape
   const handleVideoRef = (component) => {
@@ -104,93 +110,137 @@ const Single = ({route}) => {
   }, []);
 
   return (
-    <Card>
-      <ListItem>
-        {params.media_type === 'image' && <Icon name="image" type="ionicon" />}
-        {params.media_type === 'video' && (
-          <Icon name="videocam" type="ionicon" />
-        )}
-        <ListItem.Content>
-          <ListItem.Title>{params.title}</ListItem.Title>
-          <ListItem.Subtitle>
-            {formatDate(new Date(params.time_added), 'eeee d. MMMM y')}
-          </ListItem.Subtitle>
-          <ListItem.Subtitle>
-            klo {formatDate(new Date(params.time_added), 'HH.mm')}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem>
-      <Card.Divider />
-      {params.media_type === 'image' && (
-        <Card.Image
-          source={{uri: uploadsUrl + params.filename}}
-          style={styles.image}
-          PlaceholderContent={<ActivityIndicator />}
-        />
-      )}
-      {params.media_type === 'video' && (
-        <TouchableOpacity // usePoster hides video so use this to start it
-          disabled={disabled}
-          onPress={() => {
-            videoRef.playAsync();
-            setDisabled(true); // disable touchableOpacity when video is started
-          }}
-        >
-          <Video
-            ref={handleVideoRef}
-            style={styles.image}
+    <ScrollView>
+      <Card>
+        <ListItem>
+          <Avatar source={{uri: avatar}} />
+          <Text>{ownerInfo.username}</Text>
+        </ListItem>
+        <Card.Divider />
+        <Card.Title style={styles.title}>{params.title}</Card.Title>
+
+        {params.media_type === 'image' && (
+          <Card.Image
             source={{uri: uploadsUrl + params.filename}}
-            useNativeControls
-            resizeMode="contain"
-            usePoster
-            posterSource={{uri: uploadsUrl + params.screenshot}}
-          />
-        </TouchableOpacity>
-      )}
-      {params.media_type === 'audio' && (
-        <>
-          <Text>Audio not supported YET.</Text>
-          <Audio></Audio>
-        </>
-      )}
-      <Card.Divider />
-      <Text style={styles.description}>{params.description}</Text>
-      <ListItem>
-        <Avatar source={{uri: avatar}} />
-        <Text>{ownerInfo.username}</Text>
-      </ListItem>
-      <ListItem>
-        {/* TODO: show like or dislike button depending on the current like status,
-        calculate like count for a file */}
-        {iAmLikingIt ? (
-          <Button
-            title="Like"
-            onPress={() => {
-              // use api hooks to POST a favourite
-            }}
-          />
-        ) : (
-          <Button
-            title="Unlike"
-            onPress={() => {
-              // use api hooks to DELETE a favourite
-            }}
+            style={styles.image}
+            PlaceholderContent={<ActivityIndicator />}
           />
         )}
-        <Text>Total likes: {likes.length}</Text>
-      </ListItem>
-    </Card>
+        {params.media_type === 'video' && (
+          <TouchableOpacity // usePoster hides video so use this to start it
+            disabled={disabled}
+            onPress={() => {
+              videoRef.playAsync();
+              setDisabled(true); // disable touchableOpacity when video is started
+            }}
+          >
+            <Video
+              ref={handleVideoRef}
+              style={styles.image}
+              source={{uri: uploadsUrl + params.filename}}
+              useNativeControls
+              resizeMode="contain"
+              usePoster
+              posterSource={{uri: uploadsUrl + params.screenshot}}
+            />
+          </TouchableOpacity>
+        )}
+        {params.media_type === 'audio' && (
+          <>
+            <Text>Audio not supported YET.</Text>
+            <Audio></Audio>
+          </>
+        )}
+        <ListItem>
+          {params.media_type === 'image' && (
+            <Icon name="image-outline" type="ionicon" />
+          )}
+          {params.media_type === 'video' && (
+            <Icon name="videocam-outline" type="ionicon" />
+          )}
+          <ListItem.Content>
+            <ListItem.Subtitle style={styles.date}>
+              {formatDate(new Date(params.time_added), 'eee d. MMM y')} klo.
+              {formatDate(new Date(params.time_added), 'HH.mm')}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.listItemTitle}>Description:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
+            <Text style={styles.text}>{allData.description}</Text>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.listItemTitle}>Condition:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
+            <Text style={styles.text}>{allData.condition}</Text>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem style={styles.container}>
+          <ListItem.Title style={styles.listItemTitle}>Price:</ListItem.Title>
+          <ListItem.Content style={styles.listItemContent}>
+            <Text style={styles.text}>{allData.price} €</Text>
+          </ListItem.Content>
+        </ListItem>
+        <Card.Divider />
+
+        <ListItem>
+          {/* TODO: show like or dislike button depending on the current like status,
+          calculate like count for a file */}
+          {iAmLikingIt ? (
+            <Button
+              title="Like"
+              onPress={() => {
+                // use api hooks to POST a favourite
+              }}
+            />
+          ) : (
+            <Button
+              title="Unlike"
+              onPress={() => {
+                // use api hooks to DELETE a favourite
+              }}
+            />
+          )}
+          <Text>Total likes: {likes.length}</Text>
+        </ListItem>
+      </Card>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'flex-start',
+    backgroundColor: 'red',
+  },
+  listItemTitle: {
+    alignSelf: 'flex-start',
+    flex: 1,
+  },
+  listItemContent: {
+    flex: 2,
+  },
+  text: {
+    fontSize: 14,
+  },
   image: {
     width: '100%',
     height: undefined,
-    aspectRatio: 1,
+    aspectRatio: 1.5,
   },
-  description: {
+  title: {
     marginBottom: 10,
+    fontWeight: 'bold',
+    fontSize: 30,
+    textAlign: 'left',
+  },
+  date: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

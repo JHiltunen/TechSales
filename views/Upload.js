@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
-import {View, Platform, Alert} from 'react-native';
+import {View, Platform, Alert, ScrollView, StyleSheet} from 'react-native';
 import UploadForm from '../components/UploadForm';
-import {Button, Image} from 'react-native-elements';
+import {Button, Card, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -23,6 +23,8 @@ const Upload = ({navigation}) => {
     setInputs({
       title: '',
       description: '',
+      condition: '',
+      price: '0.00',
     });
     // eslint-disable-next-line no-undef
     setImage(require('../assets/icon.png'));
@@ -36,10 +38,17 @@ const Upload = ({navigation}) => {
       let type = match ? `${filetype}/${match[1]}` : filetype;
       if (type === 'image/jpg') type = 'image/jpeg';
       console.log('doUpload mimetype:', type);
+
+      const moreData = {
+        description: inputs.description,
+        condition: inputs.condition,
+        price: inputs.price,
+      };
+
       const formData = new FormData();
       formData.append('file', {uri: image.uri, name: filename, type});
       formData.append('title', inputs.title);
-      formData.append('description', inputs.description);
+      formData.append('description', JSON.stringify(moreData));
 
       const userToken = await AsyncStorage.getItem('userToken');
       const result = await uploadMedia(formData, userToken);
@@ -103,20 +112,40 @@ const Upload = ({navigation}) => {
   };
 
   return (
-    <View>
-      <Image source={image} style={{width: '100%', height: 200}} />
-      <Button title="Select media" onPress={pickImage} />
-      <UploadForm
-        title="Upload"
-        handleSubmit={doUpload}
-        handleInputChange={handleInputChange}
-        loading={loading}
-        inputs={inputs}
-      />
-      <Button title="Reset form" onPress={resetForm} />
-    </View>
+    <ScrollView>
+      <Card style={styles.card}>
+        <View>
+          <Image source={image} style={{width: '100%', height: 200}} />
+          <Button
+            style={{margin: 20}}
+            title="Select media"
+            type="clear"
+            onPress={pickImage}
+          />
+          <UploadForm
+            title="Upload"
+            handleSubmit={doUpload}
+            handleInputChange={handleInputChange}
+            loading={loading}
+            inputs={inputs}
+          />
+          <Button
+            style={{margin: 10}}
+            title="Reset form"
+            type="clear"
+            onPress={resetForm}
+          />
+        </View>
+      </Card>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    // backgroundColor: '',
+  },
+});
 
 Upload.propTypes = {
   navigation: PropTypes.object.isRequired,
