@@ -4,8 +4,10 @@ import {useFavourites, useMedia} from '../hooks/ApiHooks';
 import ListItem from '../components/ListItem';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/core';
 
 const Likes = ({navigation}) => {
+  const isFocused = useIsFocused();
   const {getMyFavourites} = useFavourites();
   const [mediaArray, setMediaArray] = useState([]);
   const {loadMedia} = useMedia();
@@ -26,7 +28,7 @@ const Likes = ({navigation}) => {
   useEffect(() => {
     setIsFetching(false);
     getLikes();
-  }, []);
+  }, [isFocused]);
 
   return (
     <FlatList
