@@ -16,7 +16,7 @@ const useMedia = (ownFiles) => {
     })();
   }, [update]);
 
-  const loadMedia = async () => {
+  const loadMedia = async (ownLikedFiles) => {
     try {
       let mediaIlmanThumbnailia = await useTag().getFilesByTag(appID);
 
@@ -24,6 +24,22 @@ const useMedia = (ownFiles) => {
         mediaIlmanThumbnailia = mediaIlmanThumbnailia.filter(
           (item) => item.user_id === user.user_id
         );
+      }
+
+      if (ownLikedFiles) {
+        console.log('Löytyy tykkäyksiä');
+        mediaIlmanThumbnailia = mediaIlmanThumbnailia.filter((item) => {
+          const likedFiles = ownLikedFiles.filter((file) => {
+            if (file.file_id === item.file_id) {
+              return file;
+            }
+          });
+
+          console.log('testi', item.file_id, likedFiles);
+          if (likedFiles.length > 0) {
+            return item;
+          }
+        });
       }
 
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
