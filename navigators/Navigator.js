@@ -11,6 +11,7 @@ import {Icon} from 'react-native-elements';
 import Upload from '../views/Upload';
 import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
+import Likes from '../views/Likes';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,9 @@ const TabScreen = () => {
             case 'Home':
               iconName = 'home';
               break;
+            case 'Likes':
+              iconName = 'favorite';
+              break;
             case 'Profile':
               iconName = 'supervisor-account';
               break;
@@ -38,6 +42,7 @@ const TabScreen = () => {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Likes" component={Likes} />
       <Tab.Screen name="Upload" component={Upload} />
     </Tab.Navigator>
   );
