@@ -14,11 +14,14 @@ const Modify = ({route}) => {
   const {modifyMedia, loading} = useMedia();
   const {update, setUpdate} = useContext(MainContext);
 
+  const allData = JSON.parse(route.params.singleMedia.description);
   useEffect(() => {
     (() => {
       setInputs({
         title: route.params.singleMedia.title,
-        description: route.params.singleMedia.description,
+        description: allData.description,
+        price: allData.price,
+        condition: allData.condition,
       });
     })();
   }, []);
@@ -26,8 +29,19 @@ const Modify = ({route}) => {
   const doModify = async () => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
+
+      const moreData = {
+        description: inputs.description,
+        condition: inputs.condition,
+        price: inputs.price,
+      };
+      const data = {
+        title: inputs.title,
+        description: JSON.stringify(moreData),
+      };
+
       const result = await modifyMedia(
-        inputs,
+        data,
         userToken,
         route.params.singleMedia.file_id
       );
@@ -39,8 +53,8 @@ const Modify = ({route}) => {
             {
               text: 'Ok',
               onPress: () => {
-                setUpdate(update + 1);
                 navigation.navigate('My Files');
+                setUpdate(update + 1);
               },
             },
           ],
@@ -51,7 +65,6 @@ const Modify = ({route}) => {
       console.log('doModify error', e.message);
     }
   };
-
   return (
     <View>
       <UploadForm

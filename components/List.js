@@ -16,13 +16,12 @@ const List = ({navigation}) => {
   };
   useEffect(() => {
     setIsFetching(false);
-    mediaArray.reverse();
   }, [mediaArray]);
-  console.log('List: mediaArray', mediaArray);
+  console.log('List: mediaArray', update);
 
   return (
     <FlatList
-      data={mediaArray.reverse()}
+      data={mediaArray}
       renderItem={({item}) => (
         <ListItem
           singleMedia={item}

@@ -11,7 +11,8 @@ const useMedia = (ownFiles) => {
   useEffect(() => {
     // https://scriptverse.academy/tutorials/js-self-invoking-functions.html
     (async () => {
-      setMediaArray(await loadMedia());
+      const allMedia = await loadMedia();
+      setMediaArray(allMedia.reverse());
       // console.log('useMedia useEffect', mediaArray);
     })();
   }, [update]);
@@ -71,6 +72,7 @@ const useMedia = (ownFiles) => {
         },
         body: formData,
       };
+      console.log('formSSSS', formData);
       const result = await doFetch(baseUrl + 'media', options);
       return result;
     } catch (e) {
@@ -84,6 +86,7 @@ const useMedia = (ownFiles) => {
   const modifyMedia = async (data, token, id) => {
     try {
       setLoading(true);
+      console.log('form', data);
       const options = {
         method: 'PUT',
         headers: {
@@ -92,6 +95,7 @@ const useMedia = (ownFiles) => {
         },
         body: JSON.stringify(data),
       };
+      console.log('osoite', baseUrl + 'media/' + id);
       const result = await doFetch(baseUrl + 'media/' + id, options);
       return result;
     } catch (e) {
