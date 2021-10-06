@@ -2,12 +2,7 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {
-  Avatar,
-  Button,
-  Card,
-  ListItem as RNEListItem,
-} from 'react-native-elements';
+import {Avatar, Button, ListItem as RNEListItem} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -79,7 +74,7 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
           </RNEListItem.Subtitle>
         </RNEListItem.Content>
       </RNEListItem.Content>
-      <RNEListItem.Chevron />
+      <RNEListItem.Chevron color="black" />
     </TouchableOpacity>
   );
 };
@@ -89,7 +84,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     marginBottom: 2,
-    backgroundColor: '#EFD5C3',
+    backgroundColor: '#E1DFE0',
   },
   container: {
     display: 'flex',

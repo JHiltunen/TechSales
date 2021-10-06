@@ -59,14 +59,14 @@ const Profile = ({navigation}) => {
         <ListItem.Content>
           <ListItem.Title>My Files</ListItem.Title>
         </ListItem.Content>
-        <ListItem.Chevron />
+        <ListItem.Chevron color="black" />
       </ListItem>
       <ListItem bottomDivider onPress={logout}>
         <Avatar icon={{name: 'logout', color: 'black'}} />
         <ListItem.Content>
           <ListItem.Title>Logout</ListItem.Title>
         </ListItem.Content>
-        <ListItem.Chevron />
+        <ListItem.Chevron color="black" />
       </ListItem>
     </Card>
   );

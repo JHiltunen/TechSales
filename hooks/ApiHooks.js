@@ -105,9 +105,29 @@ const useMedia = (ownFiles) => {
     }
   };
 
+  const search = async (token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'POST',
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const result = await doFetch(baseUrl + 'media/search', options);
+      return result;
+    } catch (e) {
+      console.log('search error', e);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     mediaArray,
     loading,
+    search,
     loadMedia,
     loadSingleMedia,
     uploadMedia,
@@ -120,7 +140,6 @@ const useLogin = () => {
   const login = async (userCredentials) => {
     const requestOptions = {
       method: 'POST',
-      // mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(userCredentials),
     };

@@ -34,6 +34,8 @@ const TabScreen = () => {
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
+        headerStyle: {backgroundColor: '#A1CDF4'},
+        tabBarStyle: {backgroundColor: '#A1CDF4'},
       })}
     >
       <Tab.Screen name="Home" component={Home} />
@@ -46,7 +48,13 @@ const TabScreen = () => {
 const StackScreen = () => {
   const {isLoggedIn} = useContext(MainContext);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="Login , Single, My Files, Modify"
+      screenOptions={{
+        headerMode: 'screen',
+        headerStyle: {backgroundColor: '#A1CDF4'},
+      }}
+    >
       {isLoggedIn ? (
         <>
           <Stack.Screen
