@@ -27,7 +27,9 @@ const List = ({navigation}) => {
   return (
     <View>
       <SearchBar
+        platform="android"
         placeholder="Search Here..."
+        inputStyle
         onChangeText={async (text) => {
           setSearch(text);
 
