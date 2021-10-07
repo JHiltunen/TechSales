@@ -1,6 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
-import {View, Platform, Alert, ScrollView, StyleSheet} from 'react-native';
+import {
+  View,
+  Platform,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import UploadForm from '../components/UploadForm';
 import {Button, Card, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
@@ -115,13 +122,19 @@ const Upload = ({navigation}) => {
     <ScrollView>
       <Card style={styles.card}>
         <View>
-          <Image source={image} style={{width: '100%', height: 200}} />
-          <Button
-            style={{margin: 20}}
-            title="Select media"
-            type="clear"
-            onPress={pickImage}
-          />
+          <TouchableOpacity>
+            <Image
+              source={image}
+              style={{width: '100%', height: 200}}
+              onPress={pickImage}
+            />
+            <Button
+              style={{margin: 20}}
+              title="Select media"
+              type="clear"
+              onPress={pickImage}
+            />
+          </TouchableOpacity>
           <UploadForm
             title="Upload"
             handleSubmit={doUpload}
