@@ -125,31 +125,9 @@ const useMedia = (ownFiles) => {
     }
   };
 
-  const searchMedia = async (token, title) => {
-    try {
-      setLoading(true);
-      const options = {
-        method: 'POST',
-        headers: {
-          'x-access-token': token,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(title),
-      };
-      const result = await doFetch(baseUrl + 'media/search', options);
-      return result;
-    } catch (e) {
-      console.log('search error', e);
-      throw new Error(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return {
     mediaArray,
     loading,
-    searchMedia,
     loadMedia,
     loadSingleMedia,
     uploadMedia,
