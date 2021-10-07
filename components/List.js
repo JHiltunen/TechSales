@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {FlatList, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import ListItem from './ListItem';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SearchBar} from 'react-native-elements';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import CustomLabel from './CustomLabel';
 
 const List = ({navigation}) => {
   const {mediaArray} = useMedia();
@@ -13,20 +14,39 @@ const List = ({navigation}) => {
   const [isFetching, setIsFetching] = useState(false);
   const [search, setSearch] = useState('');
   const [testiTaulukko, setTestiTaulukko] = useState([]);
+
+  const filterByPrice = () => {
+    setTestiTaulukko(
+      mediaArray.filter((file) => {
+        const allData = JSON.parse(file.description);
+        console.log('Price: ', allData.price);
+        console.log('Slider1: ', multiSliderValue[0]);
+        console.log('Slider2: ', multiSliderValue[1]);
+        return (
+          allData.price >= multiSliderValue[0] &&
+          allData.price <= multiSliderValue[1]
+        );
+      })
+    );
+  };
+
   const refreshList = () => {
     setIsFetching(true);
     setUpdate(update + 1);
   };
+
   useEffect(() => {
     setIsFetching(false);
     setTestiTaulukko(mediaArray);
   }, [mediaArray]);
   console.log('List: mediaArray', update);
+  const [multiSliderValue, setMultiSliderValue] = React.useState([0, 100]);
+  const multiSliderValuesChange = (values) => setMultiSliderValue(values);
 
   return (
     <View>
       <SearchBar
-        platform="android"
+        platform="ios"
         placeholder="Search Here..."
         inputStyle
         onChangeText={async (text) => {
@@ -43,6 +63,24 @@ const List = ({navigation}) => {
         }}
         value={search}
       />
+      <View style={styles.sliderContainer}>
+        <MultiSlider
+          styles={styles.slider}
+          values={[multiSliderValue[0], multiSliderValue[1]]}
+          sliderLength={250}
+          onValuesChange={(values) => {
+            multiSliderValuesChange(values);
+            filterByPrice();
+          }}
+          min={0}
+          max={100}
+          step={10}
+          allowOverlap
+          snapped={true}
+          enableLabel={true}
+          customLabel={CustomLabel}
+        />
+      </View>
       <FlatList
         data={testiTaulukko}
         renderItem={({item}) => (
@@ -64,4 +102,15 @@ List.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
 
+const styles = StyleSheet.create({
+  sliderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
+});
 export default List;
