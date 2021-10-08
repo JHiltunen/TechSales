@@ -30,6 +30,20 @@ const List = ({navigation}) => {
     );
   };
 
+  const minAndMax = () => {
+    const prices = mediaArray.map((file) => {
+      return parseFloat(JSON.parse(file.description).price);
+    });
+
+    const min = Math.min(prices);
+    const max = Math.max(prices);
+    console.log('Min', min);
+    console.log('Max', max);
+
+    console.log('Prices', prices);
+    return [0, 100];
+  };
+
   const refreshList = () => {
     setIsFetching(true);
     setUpdate(update + 1);
@@ -40,7 +54,7 @@ const List = ({navigation}) => {
     setTestiTaulukko(mediaArray);
   }, [mediaArray]);
   console.log('List: mediaArray', update);
-  const [multiSliderValue, setMultiSliderValue] = React.useState([0, 100]);
+  const [multiSliderValue, setMultiSliderValue] = React.useState(minAndMax());
   const multiSliderValuesChange = (values) => setMultiSliderValue(values);
 
   return (
