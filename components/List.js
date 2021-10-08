@@ -45,55 +45,61 @@ const List = ({navigation}) => {
 
   return (
     <View>
-      <SearchBar
-        platform="ios"
-        placeholder="Search Here..."
-        inputStyle
-        onChangeText={async (text) => {
-          setSearch(text);
-          setTestiTaulukko(
-            mediaArray.filter((file) => {
-              const allData = JSON.parse(file.description);
-              return (
-                file.title.toUpperCase().includes(text.toUpperCase()) ||
-                allData.description.toUpperCase().includes(text.toUpperCase())
-              );
-            })
-          );
-        }}
-        value={search}
-      />
-      <View style={styles.sliderContainer}>
-        <MultiSlider
-          styles={styles.slider}
-          values={[multiSliderValue[0], multiSliderValue[1]]}
-          sliderLength={250}
-          onValuesChange={(values) => {
-            multiSliderValuesChange(values);
-            filterByPrice();
+      <View style={styles.haku}>
+        <SearchBar
+          inputStyle={{backgroundColor: '#FFFCF2'}}
+          containerStyle={{
+            backgroundColor: '#808782',
           }}
-          min={0}
-          max={100}
-          step={10}
-          allowOverlap
-          snapped={true}
-          enableLabel={true}
-          customLabel={CustomLabel}
+          placeholder="Search Here..."
+          onChangeText={async (text) => {
+            setSearch(text);
+            setTestiTaulukko(
+              mediaArray.filter((file) => {
+                const allData = JSON.parse(file.description);
+                return (
+                  file.title.toUpperCase().includes(text.toUpperCase()) ||
+                  allData.description.toUpperCase().includes(text.toUpperCase())
+                );
+              })
+            );
+          }}
+          value={search}
+        />
+        <View style={styles.sliderContainer}>
+          <MultiSlider
+            styles={styles.slider}
+            values={[multiSliderValue[0], multiSliderValue[1]]}
+            sliderLength={250}
+            onValuesChange={(values) => {
+              multiSliderValuesChange(values);
+              filterByPrice();
+            }}
+            min={0}
+            max={100}
+            step={10}
+            allowOverlap
+            snapped={true}
+            enableLabel={true}
+            customLabel={CustomLabel}
+          />
+        </View>
+      </View>
+      <View style={styles.lista}>
+        <FlatList
+          data={testiTaulukko}
+          renderItem={({item}) => (
+            <ListItem
+              singleMedia={item}
+              navigation={navigation}
+              showButtons={false}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          onRefresh={refreshList}
+          refreshing={isFetching}
         />
       </View>
-      <FlatList
-        data={testiTaulukko}
-        renderItem={({item}) => (
-          <ListItem
-            singleMedia={item}
-            navigation={navigation}
-            showButtons={false}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        onRefresh={refreshList}
-        refreshing={isFetching}
-      />
     </View>
   );
 };
@@ -103,6 +109,16 @@ List.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+  },
+  haku: {
+    height: '20%',
+    backgroundColor: '#808782',
+  },
+  lista: {
+    height: '80%',
+  },
   sliderContainer: {
     display: 'flex',
     alignItems: 'center',
