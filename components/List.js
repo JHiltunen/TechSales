@@ -35,13 +35,13 @@ const List = ({navigation}) => {
       return parseFloat(JSON.parse(file.description).price);
     });
 
-    const min = Math.min(prices);
-    const max = Math.max(prices);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
     console.log('Min', min);
     console.log('Max', max);
 
     console.log('Prices', prices);
-    return [0, 100];
+    return [min, max];
   };
 
   const refreshList = () => {
@@ -59,55 +59,59 @@ const List = ({navigation}) => {
 
   return (
     <View>
-      <SearchBar
-        platform="ios"
-        placeholder="Search Here..."
-        inputStyle
-        onChangeText={async (text) => {
-          setSearch(text);
-          setTestiTaulukko(
-            mediaArray.filter((file) => {
-              const allData = JSON.parse(file.description);
-              return (
-                file.title.toUpperCase().includes(text.toUpperCase()) ||
-                allData.description.toUpperCase().includes(text.toUpperCase())
-              );
-            })
-          );
-        }}
-        value={search}
-      />
-      <View style={styles.sliderContainer}>
-        <MultiSlider
-          styles={styles.slider}
-          values={[multiSliderValue[0], multiSliderValue[1]]}
-          sliderLength={250}
-          onValuesChange={(values) => {
-            multiSliderValuesChange(values);
-            filterByPrice();
+      <View style={styles.haku}>
+        <SearchBar
+          platform="ios"
+          placeholder="Search Here..."
+          inputStyle
+          onChangeText={async (text) => {
+            setSearch(text);
+            setTestiTaulukko(
+              mediaArray.filter((file) => {
+                const allData = JSON.parse(file.description);
+                return (
+                  file.title.toUpperCase().includes(text.toUpperCase()) ||
+                  allData.description.toUpperCase().includes(text.toUpperCase())
+                );
+              })
+            );
           }}
-          min={0}
-          max={100}
-          step={10}
-          allowOverlap
-          snapped={true}
-          enableLabel={true}
-          customLabel={CustomLabel}
+          value={search}
+        />
+        <View style={styles.sliderContainer}>
+          <MultiSlider
+            styles={styles.slider}
+            values={[multiSliderValue[0], multiSliderValue[1]]}
+            sliderLength={250}
+            onValuesChange={(values) => {
+              multiSliderValuesChange(values);
+              filterByPrice();
+            }}
+            min={0}
+            max={100}
+            step={10}
+            allowOverlap
+            snapped={true}
+            enableLabel={true}
+            customLabel={CustomLabel}
+          />
+        </View>
+      </View>
+      <View style={styles.lista}>
+        <FlatList
+          data={testiTaulukko}
+          renderItem={({item}) => (
+            <ListItem
+              singleMedia={item}
+              navigation={navigation}
+              showButtons={false}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          onRefresh={refreshList}
+          refreshing={isFetching}
         />
       </View>
-      <FlatList
-        data={testiTaulukko}
-        renderItem={({item}) => (
-          <ListItem
-            singleMedia={item}
-            navigation={navigation}
-            showButtons={false}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        onRefresh={refreshList}
-        refreshing={isFetching}
-      />
     </View>
   );
 };
@@ -117,6 +121,15 @@ List.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+  },
+  haku: {
+    height: '20%',
+  },
+  lista: {
+    height: '80%',
+  },
   sliderContainer: {
     display: 'flex',
     alignItems: 'center',
