@@ -31,24 +31,20 @@ const Profile = ({navigation}) => {
   };
   return (
     <ScrollView>
-      <Card>
+      <Card style={styles.kortti}>
         <Card.Title>
           <Text h1>{user.username}</Text>
         </Card.Title>
-        <Card.Image
+        <Avatar
+          containerStyle={{alignSelf: 'center'}}
+          size="xlarge"
+          rounded
           source={{uri: avatar}}
-          style={styles.image}
           PlaceholderContent={<ActivityIndicator />}
         />
         <ListItem>
           <Avatar icon={{name: 'email', type: 'entypo', color: 'black'}} />
           <Text>{user.email}</Text>
-        </ListItem>
-        <ListItem>
-          <Avatar
-            icon={{name: 'user-o', type: 'font-awesome', color: 'black'}}
-          />
-          <Text>{user.full_name}</Text>
         </ListItem>
         <ListItem
           bottomDivider
@@ -76,9 +72,7 @@ const Profile = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  image: {width: '100%', height: undefined, aspectRatio: 1},
-});
+const styles = StyleSheet.create({});
 
 Profile.propTypes = {
   navigation: PropTypes.object,
