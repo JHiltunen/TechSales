@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Text, ActivityIndicator, ScrollView} from 'react-native';
+import {StyleSheet, Text, ActivityIndicator, ScrollView, View} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Card, ListItem} from 'react-native-elements';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import AnimatedLottieView from 'lottie-react-native';
 
 const Profile = ({navigation}) => {
   const {setIsLoggedIn, user} = useContext(MainContext);
@@ -30,8 +31,8 @@ const Profile = ({navigation}) => {
     setIsLoggedIn(false);
   };
   return (
-    <ScrollView>
-      <Card>
+    <View style={styles.container}>
+      <Card style={styles.profile}>
         <Card.Title>
           <Text h1>{user.username}</Text>
         </Card.Title>
@@ -74,12 +75,36 @@ const Profile = ({navigation}) => {
           <ListItem.Chevron color="black" />
         </ListItem>
       </Card>
-    </ScrollView>
+      <View style={styles.animationContainer}>
+        <AnimatedLottieView
+          style={styles.animations}
+          source={require('../assets/57946-profile-user-card.json')}
+          autoPlay
+          loop
+        />
+      </View>
+    </View>
   );
 };
 
 Profile.propTypes = {
   navigation: PropTypes.object,
 };
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+  },
+  profile: {
+    height: '70%',
+  },
+  animationContainer: {
+    height: '30%',
+  },
+  animations: {
+    alignSelf: 'center',
+    height: '100%',
+  },
+});
 
 export default Profile;
