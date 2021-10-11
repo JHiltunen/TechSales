@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   animations: {
     alignSelf: 'center',
-    height: 400,
+    width: '100%',
   },
   registerAnimations: {
     alignSelf: 'center',
