@@ -37,7 +37,7 @@ const Likes = ({navigation}) => {
         <ListItem
           singleMedia={item}
           navigation={navigation}
-          showButtons={true}
+          showButtons={false}
         />
       )}
       keyExtractor={(item, index) => index.toString()}

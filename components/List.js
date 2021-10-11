@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import ListItem from './ListItem';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -47,11 +47,12 @@ const List = ({navigation}) => {
     <View>
       <View style={styles.haku}>
         <SearchBar
-          inputStyle={{backgroundColor: '#FFFCF2'}}
+          // inputStyle={{backgroundColor: '#FFFCF2'}}
           containerStyle={{
-            backgroundColor: '#808782',
+            backgroundColor: '#FFFFFF',
           }}
           placeholder="Search Here..."
+          platform="ios"
           onChangeText={async (text) => {
             setSearch(text);
             setTestiTaulukko(
@@ -67,6 +68,7 @@ const List = ({navigation}) => {
           value={search}
         />
         <View style={styles.sliderContainer}>
+          <Text>Filter price: </Text>
           <MultiSlider
             styles={styles.slider}
             values={[multiSliderValue[0], multiSliderValue[1]]}
@@ -113,11 +115,11 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   haku: {
-    height: '20%',
-    backgroundColor: '#808782',
+    height: '22%',
+    backgroundColor: '#FFFFFF',
   },
   lista: {
-    height: '80%',
+    height: '78%',
   },
   sliderContainer: {
     display: 'flex',

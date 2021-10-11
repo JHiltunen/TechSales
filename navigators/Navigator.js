@@ -24,7 +24,7 @@ const TabScreen = () => {
         headerStyle: {backgroundColor: '#252422'},
         tabBarStyle: {backgroundColor: '#252422'},
         tabBarActiveTintColor: '#EB5E28',
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({focused, size}) => {
           let iconName = '';
           switch (route.name) {
             case 'Home':
@@ -60,9 +60,10 @@ const StackScreen = () => {
   const {isLoggedIn} = useContext(MainContext);
   return (
     <Stack.Navigator
-      initialRouteName="Login, Home, Profile"
+      initialRouteName="Login"
       screenOptions={{
-        headerStyle: {backgroundColor: 'tomato'},
+        headerTintColor: '#fff',
+        headerStyle: {backgroundColor: '#252422'},
       }}
     >
       {isLoggedIn ? (
@@ -72,7 +73,7 @@ const StackScreen = () => {
             component={TabScreen}
             options={{
               headerShown: false,
-              headerStyle: '#A3ABBB',
+              // headerStyle: '#A3ABBB',
             }}
           />
           <Stack.Screen name="Single" component={Single} />

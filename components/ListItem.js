@@ -1,13 +1,8 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {
-  Avatar,
-  Button,
-  Card,
-  ListItem as RNEListItem,
-} from 'react-native-elements';
+import {Button, ListItem as RNEListItem} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,11 +20,10 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
           navigation.navigate('Single', singleMedia);
         }}
       >
-        <Avatar
-          size="large"
-          square
-          source={{uri: uploadsUrl + singleMedia.thumbnails?.w160}}
-        ></Avatar>
+        <Image
+          style={styles.image}
+          source={{uri: uploadsUrl + singleMedia.thumbnails?.w640}}
+        ></Image>
 
         <RNEListItem.Content style={styles.container}>
           <RNEListItem.Content style={styles.details}>
@@ -79,8 +73,8 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
               {allData.price} €
             </RNEListItem.Subtitle>
           </RNEListItem.Content>
+          <RNEListItem.Chevron color="black" />
         </RNEListItem.Content>
-        <RNEListItem.Chevron />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -88,11 +82,11 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 15,
     marginBottom: 2,
-    backgroundColor: '#FFFCF2',
-    height: 200,
+    backgroundColor: '#DADAD9',
+    height: 330,
   },
   container: {
     display: 'flex',
@@ -113,6 +107,11 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 15,
     padding: 5,
+  },
+  image: {
+    flex: 2,
+    width: '100%',
+    borderRadius: 5,
   },
 });
 
