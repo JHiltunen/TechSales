@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, Text, ActivityIndicator, ScrollView} from 'react-native';
+import {Text, ActivityIndicator, ScrollView} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Card, ListItem} from 'react-native-elements';
@@ -31,48 +31,52 @@ const Profile = ({navigation}) => {
   };
   return (
     <ScrollView>
-      <Card style={styles.kortti}>
+      <Card>
         <Card.Title>
           <Text h1>{user.username}</Text>
         </Card.Title>
         <Avatar
-          containerStyle={{alignSelf: 'center'}}
+          containerStyle={{alignSelf: 'center', margin: 10}}
           size="xlarge"
           rounded
           source={{uri: avatar}}
           PlaceholderContent={<ActivityIndicator />}
         />
         <ListItem>
-          <Avatar icon={{name: 'email', type: 'entypo', color: 'black'}} />
+          <Avatar
+            icon={{name: 'email', type: 'entypo', color: 'black', size: 20}}
+          />
           <Text>{user.email}</Text>
         </ListItem>
         <ListItem
-          bottomDivider
           onPress={() => {
             navigation.navigate('My Files');
           }}
         >
           <Avatar
-            icon={{name: 'file-text-o', type: 'font-awesome', color: 'black'}}
+            icon={{
+              name: 'file-text-o',
+              type: 'font-awesome',
+              color: 'black',
+              size: 20,
+            }}
           />
           <ListItem.Content>
             <ListItem.Title>My Files</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron color="black" />
         </ListItem>
-        <ListItem bottomDivider onPress={logout}>
-          <Avatar icon={{name: 'logout', color: 'black'}} />
+        <ListItem onPress={logout}>
+          <Avatar icon={{name: 'logout', color: 'black', size: 20}} />
           <ListItem.Content>
             <ListItem.Title>Logout</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron color="black" />
         </ListItem>
       </Card>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 Profile.propTypes = {
   navigation: PropTypes.object,
