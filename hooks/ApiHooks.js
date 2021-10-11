@@ -46,6 +46,9 @@ const useMedia = (ownFiles) => {
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
+
+      // console.log('comments', comments);
+
       return Promise.all(kaikkiTiedot);
     } catch (e) {
       console.log('loadMedia', e.message);
@@ -125,6 +128,50 @@ const useMedia = (ownFiles) => {
     }
   };
 
+  const loadComments = async (id) => {
+    try {
+      console.log('fileId: ', id);
+      const commentsByFileId = await doFetch(baseUrl + '/comments/file/' + id);
+      return commentsByFileId;
+    } catch (e) {
+      console.log('get comments by file id', e.message);
+    }
+  };
+
+  const uploadComment = async (data, token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'POST',
+        headers: {'x-access-token': token, 'Content-type': 'application/json'},
+        body: data,
+      };
+      const result = await doFetch(baseUrl + 'comments', options);
+      return result;
+    } catch (e) {
+      console.log('uploadMedia error', e);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteComment = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const deleteComment = await doFetch(
+        baseUrl + '/comments/' + fileId,
+        options
+      );
+      return deleteComment;
+    } catch (error) {
+      console.log('deleteComment error', error);
+    }
+  };
+
   return {
     mediaArray,
     loading,
@@ -133,6 +180,9 @@ const useMedia = (ownFiles) => {
     uploadMedia,
     deleteMedia,
     modifyMedia,
+    loadComments,
+    uploadComment,
+    deleteComment,
   };
 };
 

@@ -7,16 +7,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {
-  Card,
-  ListItem,
-  Text,
-  Button,
-  Icon,
-  Avatar,
-} from 'react-native-elements';
+import {Card, ListItem, Text, Icon, Avatar, Input} from 'react-native-elements';
 import {Video, Audio} from 'expo-av';
-import {useFavourites, useTag, useUser} from '../hooks/ApiHooks';
+import {useFavourites, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {formatDate} from '../utils/dateFunctions';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -31,6 +24,8 @@ const Single = ({route}) => {
     getFavouritesByFileId,
     getMyFavourites,
   } = useFavourites();
+  const {uploadComment} = useMedia();
+  const [comment, setComment] = useState('');
   const [ownerInfo, setOwnerInfo] = useState({username: ''});
   const [likes, setLikes] = useState([]);
   const [iAmLikingIt, setIAmLikingIt] = useState(false);
@@ -130,12 +125,27 @@ const Single = ({route}) => {
     getLikes();
   }, []);
 
+  const postComment = async (fileId, txt) => {
+    try {
+      const token = AsyncStorage.getItem('userToken');
+      const comment = {
+        file_id: fileId,
+        comment: txt,
+      };
+    } catch (e) {
+      console.log('Single.js postComment error', e.message);
+      return e.message;
+    }
+  };
+
   return (
     <ScrollView>
       <Card>
         <ListItem>
           <Avatar source={{uri: avatar}} />
-          <Text>{ownerInfo.username}</Text>
+          <Text>
+            {ownerInfo.username} || {params.file_id}
+          </Text>
         </ListItem>
         <Card.Divider />
         <Card.Title style={styles.title}>{params.title}</Card.Title>
@@ -247,6 +257,41 @@ const Single = ({route}) => {
           )}
           <Text>Likes: {likes.length}</Text>
         </ListItem>
+        <Card.Divider />
+        <Input
+          placeholder="Comment"
+          onChangeText={(value) => {
+            setComment(value);
+          }}
+          leftIcon={<Icon name="comment" size={24} color="black" />}
+          rightIcon={
+            <Icon
+              name="send"
+              size={24}
+              color="black"
+              onPress={async () => {
+                try {
+                  const token = await AsyncStorage.getItem('userToken');
+                  const commentObject = {
+                    file_id: params.file_id,
+                    comment: comment,
+                  };
+                  console.log('comment:', commentObject);
+                  const upload = await uploadComment(
+                    JSON.stringify(commentObject),
+                    token
+                  );
+                  if (upload) {
+                    alert('Comment added');
+                  }
+                } catch (e) {
+                  alert('Error: ', e.message);
+                  console.log('Error', e.message);
+                }
+              }}
+            />
+          }
+        />
       </Card>
     </ScrollView>
   );
