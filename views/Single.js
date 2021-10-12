@@ -179,7 +179,7 @@ const Single = ({route}) => {
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
-        <Card.Divider />
+
         <ListItem style={styles.container}>
           <ListItem.Title style={styles.listItemTitle}>
             Description:

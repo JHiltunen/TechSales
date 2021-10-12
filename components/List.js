@@ -47,9 +47,9 @@ const List = ({navigation}) => {
     <View>
       <View style={styles.haku}>
         <SearchBar
-          // inputStyle={{backgroundColor: '#FFFCF2'}}
           containerStyle={{
             backgroundColor: '#FFFFFF',
+            marginHorizontal: 13,
           }}
           placeholder="Search Here..."
           platform="ios"
@@ -72,7 +72,7 @@ const List = ({navigation}) => {
           <MultiSlider
             styles={styles.slider}
             values={[multiSliderValue[0], multiSliderValue[1]]}
-            sliderLength={250}
+            sliderLength={300}
             onValuesChange={(values) => {
               multiSliderValuesChange(values);
               filterByPrice();

@@ -1,6 +1,12 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {Image, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
 import {Button, ListItem as RNEListItem} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
@@ -30,43 +36,46 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
             <RNEListItem.Title numberOfLines={1} h4>
               {singleMedia.title}
             </RNEListItem.Title>
-            <RNEListItem.Subtitle numberOfLines={1}>
+            {/*             <RNEListItem.Subtitle numberOfLines={1}>
               {allData.description}
-            </RNEListItem.Subtitle>
-            <RNEListItem.Subtitle numberOfLines={1} style={styles.margin}>
+            </RNEListItem.Subtitle> */}
+            <RNEListItem.Subtitle numberOfLines={1} style={styles.date}>
               {timeSince(singleMedia.time_added)}
             </RNEListItem.Subtitle>
-            {showButtons && (
-              <>
-                <Button
-                  style={styles.buttons}
-                  title="Modify"
-                  onPress={() => {
-                    navigation.navigate('Modify', {singleMedia, navigation});
-                  }}
-                />
-                <Button
-                  style={styles.buttons}
-                  title="Delete"
-                  onPress={async () => {
-                    try {
-                      const token = await AsyncStorage.getItem('userToken');
-                      const response = await deleteMedia(
-                        singleMedia.file_id,
-                        token
-                      );
-                      console.log('Delete', response);
-                      if (response.message) {
-                        setUpdate(update + 1);
+            <View style={styles.container}>
+              {showButtons && (
+                <>
+                  <Button
+                    containerStyle={styles.buttons}
+                    title="Modify"
+                    onPress={() => {
+                      navigation.navigate('Modify', {singleMedia, navigation});
+                    }}
+                  />
+                  <Button
+                    containerStyle={styles.buttons}
+                    title="Delete"
+                    onPress={async () => {
+                      try {
+                        const token = await AsyncStorage.getItem('userToken');
+                        const response = await deleteMedia(
+                          singleMedia.file_id,
+                          token
+                        );
+                        console.log('Delete', response);
+                        if (response.message) {
+                          setUpdate(update + 1);
+                        }
+                      } catch (e) {
+                        console.log('ListItem, delete: ', e.message);
                       }
-                    } catch (e) {
-                      console.log('ListItem, delete: ', e.message);
-                    }
-                  }}
-                />
-              </>
-            )}
+                    }}
+                  />
+                </>
+              )}
+            </View>
           </RNEListItem.Content>
+
           <RNEListItem.Content style={styles.info}>
             <RNEListItem.Subtitle style={styles.condition}>
               {allData.condition}
@@ -103,27 +112,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   condition: {
-    fontSize: 15,
-    padding: 5,
-    marginLeft: 20,
-    marginTop: 10,
+    fontSize: 16,
+    padding: 13,
   },
   price: {
-    fontSize: 15,
-    padding: 5,
-    marginLeft: 20,
+    fontSize: 16,
   },
   image: {
     flex: 2,
     width: '100%',
     borderRadius: 5,
   },
-  margin: {
+  date: {
     display: 'flex',
-    alignSelf: 'flex-start',
     marginTop: 10,
   },
-  buttons: {},
+  buttons: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
 });
 
 ListItem.propTypes = {
