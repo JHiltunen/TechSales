@@ -44,7 +44,11 @@ const useMedia = (ownFiles) => {
       }
 
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
-        return await loadSingleMedia(media.file_id);
+        const comment = await loadComments(media.file_id);
+        const file = await loadSingleMedia(media.file_id);
+        file.comments = JSON.stringify(comment);
+        console.log('file: ', file);
+        return file;
       });
 
       // console.log('comments', comments);
@@ -130,8 +134,7 @@ const useMedia = (ownFiles) => {
 
   const loadComments = async (id) => {
     try {
-      console.log('fileId: ', id);
-      const commentsByFileId = await doFetch(baseUrl + '/comments/file/' + id);
+      const commentsByFileId = await doFetch(baseUrl + 'comments/file/' + id);
       return commentsByFileId;
     } catch (e) {
       console.log('get comments by file id', e.message);

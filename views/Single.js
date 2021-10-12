@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  View,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
@@ -34,6 +35,7 @@ const Single = ({route}) => {
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const allData = JSON.parse(params.description);
+  const [comments, setComments] = useState([]);
 
   // screen orientation, show video in fullscreen when landscape
   const handleVideoRef = (component) => {
@@ -89,6 +91,15 @@ const Single = ({route}) => {
     const token = await AsyncStorage.getItem('userToken');
     setOwnerInfo(await getUserInfo(params.user_id, token));
   };
+
+  const getUsername = async (userId) => {
+    console.log('getUsername -> id', userId);
+    const token = await AsyncStorage.getItem('userToken');
+    const userInfo = await getUserInfo(userId, token);
+    console.log('username', userInfo.username);
+    return userInfo.username;
+  };
+
   const getLikes = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -123,6 +134,7 @@ const Single = ({route}) => {
     getOwnerInfo();
     getAvatar();
     getLikes();
+    setComments(JSON.parse(params.comments));
   }, []);
 
   const postComment = async (fileId, txt) => {
@@ -146,6 +158,7 @@ const Single = ({route}) => {
           <Text>
             {ownerInfo.username} || {params.file_id}
           </Text>
+          <Text>{JSON.parse(params.comments).pop().comment}</Text>
         </ListItem>
         <Card.Divider />
         <Card.Title style={styles.title}>{params.title}</Card.Title>
@@ -292,6 +305,10 @@ const Single = ({route}) => {
             />
           }
         />
+        {comments.map((c) => {
+          console.log('Comment:', c.comment);
+          <Text>{c.comment}</Text>;
+        })}
       </Card>
     </ScrollView>
   );
