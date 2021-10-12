@@ -33,18 +33,20 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
             <RNEListItem.Subtitle numberOfLines={1}>
               {allData.description}
             </RNEListItem.Subtitle>
-            <RNEListItem.Subtitle numberOfLines={1}>
+            <RNEListItem.Subtitle numberOfLines={1} style={styles.margin}>
               {timeSince(singleMedia.time_added)}
             </RNEListItem.Subtitle>
             {showButtons && (
               <>
                 <Button
+                  style={styles.buttons}
                   title="Modify"
                   onPress={() => {
                     navigation.navigate('Modify', {singleMedia, navigation});
                   }}
                 />
                 <Button
+                  style={styles.buttons}
                   title="Delete"
                   onPress={async () => {
                     try {
@@ -83,7 +85,7 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'column',
-    padding: 15,
+    padding: 20,
     marginBottom: 2,
     backgroundColor: '#DADAD9',
     height: 330,
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   details: {
-    marginLeft: 20,
+    marginTop: 10,
   },
   info: {
     display: 'flex',
@@ -103,16 +105,25 @@ const styles = StyleSheet.create({
   condition: {
     fontSize: 15,
     padding: 5,
+    marginLeft: 20,
+    marginTop: 10,
   },
   price: {
     fontSize: 15,
     padding: 5,
+    marginLeft: 20,
   },
   image: {
     flex: 2,
     width: '100%',
     borderRadius: 5,
   },
+  margin: {
+    display: 'flex',
+    alignSelf: 'flex-start',
+    marginTop: 10,
+  },
+  buttons: {},
 });
 
 ListItem.propTypes = {

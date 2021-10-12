@@ -7,14 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {
-  Card,
-  ListItem,
-  Text,
-  Button,
-  Icon,
-  Avatar,
-} from 'react-native-elements';
+import {Card, ListItem, Text, Icon, Avatar} from 'react-native-elements';
 import {Video, Audio} from 'expo-av';
 import {useFavourites, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -186,6 +179,7 @@ const Single = ({route}) => {
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
+        <Card.Divider />
         <ListItem style={styles.container}>
           <ListItem.Title style={styles.listItemTitle}>
             Description:
@@ -262,6 +256,7 @@ const styles = StyleSheet.create({
   listItemTitle: {
     alignSelf: 'flex-start',
     flex: 1,
+    fontSize: 16,
   },
   listItemContent: {
     flex: 2,

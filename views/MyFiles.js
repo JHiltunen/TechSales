@@ -8,7 +8,7 @@ const MyFiles = ({navigation}) => {
   const {mediaArray} = useMedia(true);
   return (
     <FlatList
-      data={mediaArray.reverse()}
+      data={mediaArray}
       renderItem={({item}) => (
         <ListItem
           singleMedia={item}
