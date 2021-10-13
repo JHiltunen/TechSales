@@ -44,20 +44,40 @@ const Comment = ({comment}) => {
   }, []);
 
   return (
-    <View style={styles.commentContainer}>
-      <Avatar source={{uri: avatar}} />
+    <View style={styles.container}>
+      <Avatar source={{uri: avatar}} rounded />
       <View style={styles.commentDetail}>
-        <Text>{username}</Text>
-        <Text>{comment.comment}</Text>
-      </View>
-      <View style={styles.timeSince}>
-        <Text>{timeSince(comment.time_added)}</Text>
+        <Text style={styles.username}>{username}</Text>
+        <Text> {comment.comment}</Text>
+        <Text style={styles.timeSince}>{timeSince(comment.time_added)}</Text>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: 'red',
+    flex: 1,
+    margin: 5,
+  },
+  commentDetail: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: 'green',
+  },
+  timeSince: {
+    alignSelf: 'flex-end',
+    flexBasis: '100%',
+  },
+  username: {
+    fontWeight: 'bold',
+  },
+});
 
 Comment.propTypes = {
   comment: PropTypes.object.isRequired,
