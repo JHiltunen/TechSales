@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
   Image,
@@ -9,15 +9,51 @@ import {
 } from 'react-native';
 import {uploadsUrl} from '../utils/variables';
 import {Button, ListItem as RNEListItem} from 'react-native-elements';
-import {useMedia} from '../hooks/ApiHooks';
+import {useFavourites, useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {timeSince} from '../utils/dateFunctions';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import {useIsFocused} from '@react-navigation/core';
 
 const ListItem = ({singleMedia, navigation, showButtons}) => {
   const {update, setUpdate} = useContext(MainContext);
   const {deleteMedia} = useMedia();
   const allData = JSON.parse(singleMedia.description);
+  const isFocused = useIsFocused();
+
+  const {
+    addFavourite,
+    deleteFavourite,
+    getFavouritesByFileId,
+    getMyFavourites,
+  } = useFavourites();
+  const [likes, setLikes] = useState([]);
+  const [iAmLikingIt, setIAmLikingIt] = useState(false);
+
+  const getLikes = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const likesByFileId = await getFavouritesByFileId(singleMedia.file_id);
+      setLikes(likesByFileId);
+
+      const myLikes = await getMyFavourites(token);
+      console.log('myLikes', myLikes);
+      const currentLikes = myLikes.filter((like) => {
+        if (like.file_id === singleMedia.file_id) {
+          return like;
+        }
+      });
+      console.log('currentLikes', currentLikes);
+      setIAmLikingIt(currentLikes.length > 0 ? true : false);
+    } catch (e) {
+      console.log('Error', e.message);
+    }
+  };
+  useEffect(() => {
+    getLikes();
+  }, [isFocused]);
+
   return (
     <SafeAreaView>
       <TouchableOpacity
@@ -79,7 +115,6 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
               )}
             </View>
           </RNEListItem.Content>
-
           <RNEListItem.Content style={styles.info}>
             <RNEListItem.Subtitle style={styles.condition}>
               {allData.condition}
@@ -88,7 +123,38 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
               {allData.price} €
             </RNEListItem.Subtitle>
           </RNEListItem.Content>
-          <RNEListItem.Chevron color="black" />
+          {!iAmLikingIt ? (
+            <AntIcon
+              name="hearto"
+              color="black"
+              size={25}
+              onPress={async () => {
+                const token = await AsyncStorage.getItem('userToken');
+                const likePost = await addFavourite(singleMedia.file_id, token);
+                if (likePost) {
+                  getLikes();
+                }
+                console.log('Like post:', likePost);
+              }}
+            />
+          ) : (
+            <AntIcon
+              name="heart"
+              color="red"
+              size={25}
+              onPress={async () => {
+                const token = await AsyncStorage.getItem('userToken');
+                const dontLikePost = await deleteFavourite(
+                  singleMedia.file_id,
+                  token
+                );
+                if (dontLikePost) {
+                  getLikes();
+                }
+                console.log('dont like post:', dontLikePost);
+              }}
+            />
+          )}
         </RNEListItem.Content>
       </TouchableOpacity>
     </SafeAreaView>
