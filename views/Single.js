@@ -12,9 +12,10 @@ import {Card, ListItem, Text, Icon, Avatar, Input} from 'react-native-elements';
 import {Video, Audio} from 'expo-av';
 import {useFavourites, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {formatDate} from '../utils/dateFunctions';
+import {formatDate, timeSince} from '../utils/dateFunctions';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import Comment from '../components/Comment';
 
 const Single = ({route}) => {
   const {params} = route;
@@ -25,7 +26,7 @@ const Single = ({route}) => {
     getFavouritesByFileId,
     getMyFavourites,
   } = useFavourites();
-  const {uploadComment} = useMedia();
+  const {uploadComment, loadComments} = useMedia();
   const [comment, setComment] = useState('');
   const [ownerInfo, setOwnerInfo] = useState({username: ''});
   const [likes, setLikes] = useState([]);
@@ -36,6 +37,7 @@ const Single = ({route}) => {
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const allData = JSON.parse(params.description);
   const [comments, setComments] = useState([]);
+  const [commentUpdate, setCommentUpdate] = useState(0);
 
   // screen orientation, show video in fullscreen when landscape
   const handleVideoRef = (component) => {
@@ -92,14 +94,6 @@ const Single = ({route}) => {
     setOwnerInfo(await getUserInfo(params.user_id, token));
   };
 
-  const getUsername = async (userId) => {
-    console.log('getUsername -> id', userId);
-    const token = await AsyncStorage.getItem('userToken');
-    const userInfo = await getUserInfo(userId, token);
-    console.log('username', userInfo.username);
-    return userInfo.username;
-  };
-
   const getLikes = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -130,12 +124,25 @@ const Single = ({route}) => {
     }
   };
 
+  const getComments = async () => {
+    try {
+      const commentsByFileId = await loadComments(params.file_id);
+      setComments(commentsByFileId);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   useEffect(() => {
     getOwnerInfo();
     getAvatar();
     getLikes();
-    setComments(JSON.parse(params.comments));
   }, []);
+
+  useEffect(() => {
+    console.log('kommentit haettu', commentUpdate, comments);
+    getComments();
+  }, [commentUpdate]);
 
   const postComment = async (fileId, txt) => {
     try {
@@ -158,7 +165,6 @@ const Single = ({route}) => {
           <Text>
             {ownerInfo.username} || {params.file_id}
           </Text>
-          <Text>{JSON.parse(params.comments).pop().comment}</Text>
         </ListItem>
         <Card.Divider />
         <Card.Title style={styles.title}>{params.title}</Card.Title>
@@ -295,6 +301,7 @@ const Single = ({route}) => {
                     token
                   );
                   if (upload) {
+                    setCommentUpdate(commentUpdate + 1);
                     alert('Comment added');
                   }
                 } catch (e) {
@@ -305,9 +312,8 @@ const Single = ({route}) => {
             />
           }
         />
-        {comments.map((c) => {
-          console.log('Comment:', c.comment);
-          <Text>{c.comment}</Text>;
+        {comments.map((c, index) => {
+          return <Comment key={index} comment={c} />;
         })}
       </Card>
     </ScrollView>
@@ -327,6 +333,24 @@ const styles = StyleSheet.create({
   },
   listItemContent: {
     flex: 2,
+  },
+  commentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'red',
+    flexWrap: 'nowrap',
+  },
+  commentDetail: {
+    flex: 1,
+    display: 'flex',
+    backgroundColor: 'green',
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+  },
+  timeSince: {
+    flex: 1,
+    flexDirection: 'column',
   },
   text: {
     fontSize: 14,
