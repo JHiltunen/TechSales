@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'red',
     flex: 1,
     margin: 5,
   },
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: 'green',
+    marginHorizontal: 10,
   },
   timeSince: {
     alignSelf: 'flex-end',
