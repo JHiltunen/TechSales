@@ -134,9 +134,9 @@ const Upload = ({navigation}) => {
                 onPress={pickImage}
               />
               <Button
-                style={{margin: 20}}
+                style={{marginVertical: 20}}
                 title="Select media"
-                type="clear"
+                type="outline"
                 onPress={pickImage}
               />
             </TouchableOpacity>

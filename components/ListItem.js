@@ -48,6 +48,8 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
                   <Button
                     containerStyle={styles.buttons}
                     title="Modify"
+                    type="outline"
+                    titleStyle={{color: 'green'}}
                     onPress={() => {
                       navigation.navigate('Modify', {singleMedia, navigation});
                     }}
@@ -55,6 +57,8 @@ const ListItem = ({singleMedia, navigation, showButtons}) => {
                   <Button
                     containerStyle={styles.buttons}
                     title="Delete"
+                    type="outline"
+                    titleStyle={{color: 'red'}}
                     onPress={async () => {
                       try {
                         const token = await AsyncStorage.getItem('userToken');

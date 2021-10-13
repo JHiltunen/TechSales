@@ -1,11 +1,12 @@
 import React, {useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {View, ActivityIndicator, Alert} from 'react-native';
+import {View, ActivityIndicator, Alert, StyleSheet} from 'react-native';
 import UploadForm from '../components/UploadForm';
 import useUploadForm from '../hooks/UploadHooks';
 import {useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
+import {Card} from 'react-native-elements';
 
 const Modify = ({route}) => {
   const navigation = route.params.navigation;
@@ -67,17 +68,25 @@ const Modify = ({route}) => {
   };
   return (
     <View>
-      <UploadForm
-        title="Upload"
-        handleSubmit={doModify}
-        handleInputChange={handleInputChange}
-        loading={loading}
-        inputs={inputs}
-      />
-      {loading && <ActivityIndicator />}
+      <Card style={styles.card}>
+        <UploadForm
+          title="Upload"
+          handleSubmit={doModify}
+          handleInputChange={handleInputChange}
+          loading={loading}
+          inputs={inputs}
+        />
+        {loading && <ActivityIndicator />}
+      </Card>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#fff',
+  },
+});
 
 Modify.propTypes = {
   route: PropTypes.object.isRequired,

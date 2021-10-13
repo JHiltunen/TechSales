@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Input} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
@@ -28,8 +28,19 @@ const UploadForm = ({
         onChangeText={(txt) => handleInputChange('description', txt)}
         value={inputs.description}
       />
-      <Text>Item condition:</Text>
+      <Text style={styles.price}>Price</Text>
+      <CurrencyInput
+        style={styles.price}
+        value={inputs.price}
+        onChangeValue={(price) => handleInputChange('price', price)}
+        prefix="€"
+        delimiter=","
+        separator="."
+        precision={2}
+      />
+      <Text style={styles.price}>Item condition:</Text>
       <Picker
+        style={styles.price}
         prompt="Select item condition"
         selectedValue={inputs.condition}
         onValueChange={(itemValue, itemIndex) =>
@@ -42,18 +53,11 @@ const UploadForm = ({
         <Picker.Item label="Fair" value="Fair" />
         <Picker.Item label="Poor" value="Poor" />
       </Picker>
-      <Text>Price</Text>
-      <CurrencyInput
-        value={inputs.price}
-        onChangeValue={(price) => handleInputChange('price', price)}
-        prefix="€"
-        delimiter=","
-        separator="."
-        precision={2}
-      />
+
       <Button
+        style={{marginTop: 10}}
         title={title}
-        type="clear"
+        type="outline"
         onPress={handleSubmit}
         loading={loading}
       />
@@ -64,6 +68,10 @@ const UploadForm = ({
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
+  },
+  price: {
+    fontSize: 18,
+    padding: 10,
   },
 });
 
