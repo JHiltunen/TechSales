@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 import UploadForm from '../components/UploadForm';
 import {Button, Card, Image} from 'react-native-elements';
@@ -120,36 +121,42 @@ const Upload = ({navigation}) => {
 
   return (
     <ScrollView>
-      <Card style={styles.card}>
-        <View>
-          <TouchableOpacity>
-            <Image
-              source={image}
-              style={{width: '100%', height: 200}}
-              onPress={pickImage}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <Card style={styles.card}>
+          <View>
+            <TouchableOpacity>
+              <Image
+                source={image}
+                style={{width: '100%', height: 200}}
+                onPress={pickImage}
+              />
+              <Button
+                style={{marginVertical: 20}}
+                title="Select media"
+                type="outline"
+                onPress={pickImage}
+              />
+            </TouchableOpacity>
+            <UploadForm
+              title="Upload"
+              handleSubmit={doUpload}
+              handleInputChange={handleInputChange}
+              loading={loading}
+              inputs={inputs}
             />
             <Button
-              style={{margin: 20}}
-              title="Select media"
+              style={{margin: 10}}
+              title="Reset form"
               type="clear"
-              onPress={pickImage}
+              titleStyle={{color: 'red', marginTop: 15}}
+              onPress={resetForm}
             />
-          </TouchableOpacity>
-          <UploadForm
-            title="Upload"
-            handleSubmit={doUpload}
-            handleInputChange={handleInputChange}
-            loading={loading}
-            inputs={inputs}
-          />
-          <Button
-            style={{margin: 10}}
-            title="Reset form"
-            type="clear"
-            onPress={resetForm}
-          />
-        </View>
-      </Card>
+          </View>
+        </Card>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

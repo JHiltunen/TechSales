@@ -20,7 +20,11 @@ const TabScreen = () => {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarIcon: ({color, size}) => {
+        headerTintColor: '#ECF4F8',
+        headerStyle: {backgroundColor: '#252422'},
+        tabBarStyle: {backgroundColor: '#252422'},
+        tabBarActiveTintColor: '#EB5E28',
+        tabBarIcon: ({focused, size}) => {
           let iconName = '';
           switch (route.name) {
             case 'Home':
@@ -36,7 +40,11 @@ const TabScreen = () => {
               iconName = 'file-upload';
               break;
           }
-          return <Icon name={iconName} size={size} color={color} />;
+          return focused ? (
+            <Icon name={iconName} size={size} color="#EB5E28" />
+          ) : (
+            <Icon name={iconName} size={size} color="#FFFCF2" />
+          );
         },
       })}
     >
@@ -51,7 +59,13 @@ const TabScreen = () => {
 const StackScreen = () => {
   const {isLoggedIn} = useContext(MainContext);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerTintColor: '#fff',
+        headerStyle: {backgroundColor: '#252422'},
+      }}
+    >
       {isLoggedIn ? (
         <>
           <Stack.Screen
@@ -59,7 +73,7 @@ const StackScreen = () => {
             component={TabScreen}
             options={{
               headerShown: false,
-              headerStyle: '#A3ABBB',
+              // headerStyle: '#A3ABBB',
             }}
           />
           <Stack.Screen name="Single" component={Single} />

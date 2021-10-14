@@ -24,12 +24,10 @@ const RegisterForm = ({navigation}) => {
 
   return (
     <View>
-      <Text style={{textAlign: 'center', color: 'red'}}>
-        * Mandatory fields
-      </Text>
+      <Text style={{textAlign: 'center', color: 'red'}}></Text>
       <Input
         autoCapitalize="none"
-        placeholder="username *"
+        placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(event) => {
           console.log('onEndEditing value', event.nativeEvent.text);
@@ -40,7 +38,7 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="password *"
+        placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
         onEndEditing={(event) => {
@@ -50,7 +48,7 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="confirm password *"
+        placeholder="confirm password"
         onChangeText={(txt) => handleInputChange('confirmPassword', txt)}
         secureTextEntry={true}
         onEndEditing={(event) => {
@@ -60,21 +58,12 @@ const RegisterForm = ({navigation}) => {
       />
       <Input
         autoCapitalize="none"
-        placeholder="email *"
+        placeholder="email"
         onChangeText={(txt) => handleInputChange('email', txt)}
         onEndEditing={(event) => {
           handleOnEndEditing('email', event.nativeEvent.text);
         }}
         errorMessage={errors.email}
-      />
-      <Input
-        autoCapitalize="none"
-        placeholder="full name"
-        onChangeText={(txt) => handleInputChange('full_name', txt)}
-        onEndEditing={(event) => {
-          handleOnEndEditing('full_name', event.nativeEvent.text);
-        }}
-        errorMessage={errors.full_name}
       />
 
       <Button

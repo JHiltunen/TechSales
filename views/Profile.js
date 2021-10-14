@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, Text, ActivityIndicator, ScrollView} from 'react-native';
+import {StyleSheet, Text, ActivityIndicator, ScrollView, View} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Card, ListItem} from 'react-native-elements';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import AnimatedLottieView from 'lottie-react-native';
 
 const Profile = ({navigation}) => {
   const {setIsLoggedIn, user} = useContext(MainContext);
@@ -30,58 +31,80 @@ const Profile = ({navigation}) => {
     setIsLoggedIn(false);
   };
   return (
-    <ScrollView>
-      <Card>
+    <View style={styles.container}>
+      <Card style={styles.profile}>
         <Card.Title>
           <Text h1>{user.username}</Text>
         </Card.Title>
-        <Card.Image
+        <Avatar
+          containerStyle={{alignSelf: 'center', margin: 10}}
+          size="xlarge"
+          rounded
           source={{uri: avatar}}
-          style={styles.image}
           PlaceholderContent={<ActivityIndicator />}
         />
         <ListItem>
-          <Avatar icon={{name: 'email', type: 'entypo', color: 'black'}} />
+          <Avatar
+            icon={{name: 'email', type: 'entypo', color: 'black', size: 20}}
+          />
           <Text>{user.email}</Text>
         </ListItem>
-        <ListItem>
-          <Avatar
-            icon={{name: 'user-o', type: 'font-awesome', color: 'black'}}
-          />
-          <Text>{user.full_name}</Text>
-        </ListItem>
         <ListItem
-          bottomDivider
           onPress={() => {
             navigation.navigate('My Files');
           }}
         >
           <Avatar
-            icon={{name: 'file-text-o', type: 'font-awesome', color: 'black'}}
+            icon={{
+              name: 'file-text-o',
+              type: 'font-awesome',
+              color: 'black',
+              size: 20,
+            }}
           />
           <ListItem.Content>
             <ListItem.Title>My Files</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron color="black" />
         </ListItem>
-        <ListItem bottomDivider onPress={logout}>
-          <Avatar icon={{name: 'logout', color: 'black'}} />
+        <ListItem onPress={logout}>
+          <Avatar icon={{name: 'logout', color: 'black', size: 20}} />
           <ListItem.Content>
             <ListItem.Title>Logout</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron color="black" />
         </ListItem>
       </Card>
-    </ScrollView>
+      <View style={styles.animationContainer}>
+        <AnimatedLottieView
+          style={styles.animations}
+          source={require('../assets/57946-profile-user-card.json')}
+          autoPlay
+          loop
+        />
+      </View>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  image: {width: '100%', height: undefined, aspectRatio: 1},
-});
 
 Profile.propTypes = {
   navigation: PropTypes.object,
 };
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+  },
+  profile: {
+    height: '70%',
+  },
+  animationContainer: {
+    height: '30%',
+  },
+  animations: {
+    alignSelf: 'center',
+    height: '100%',
+  },
+});
 
 export default Profile;

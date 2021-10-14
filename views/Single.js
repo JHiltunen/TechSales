@@ -215,6 +215,7 @@ const Single = ({route}) => {
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
+
         <ListItem style={styles.container}>
           <ListItem.Title style={styles.listItemTitle}>
             Description:
@@ -333,6 +334,7 @@ const styles = StyleSheet.create({
   listItemTitle: {
     alignSelf: 'flex-start',
     flex: 1,
+    fontSize: 16,
   },
   listItemContent: {
     flex: 2,

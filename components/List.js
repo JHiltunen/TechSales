@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import ListItem from './ListItem';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -45,55 +45,63 @@ const List = ({navigation}) => {
 
   return (
     <View>
-      <SearchBar
-        platform="ios"
-        placeholder="Search Here..."
-        inputStyle
-        onChangeText={async (text) => {
-          setSearch(text);
-          setTestiTaulukko(
-            mediaArray.filter((file) => {
-              const allData = JSON.parse(file.description);
-              return (
-                file.title.toUpperCase().includes(text.toUpperCase()) ||
-                allData.description.toUpperCase().includes(text.toUpperCase())
-              );
-            })
-          );
-        }}
-        value={search}
-      />
-      <View style={styles.sliderContainer}>
-        <MultiSlider
-          styles={styles.slider}
-          values={[multiSliderValue[0], multiSliderValue[1]]}
-          sliderLength={250}
-          onValuesChange={(values) => {
-            multiSliderValuesChange(values);
-            filterByPrice();
+      <View style={styles.haku}>
+        <SearchBar
+          containerStyle={{
+            backgroundColor: '#FFFFFF',
+            marginHorizontal: 13,
           }}
-          min={0}
-          max={100}
-          step={10}
-          allowOverlap
-          snapped={true}
-          enableLabel={true}
-          customLabel={CustomLabel}
+          placeholder="Search Here..."
+          platform="ios"
+          onChangeText={async (text) => {
+            setSearch(text);
+            setTestiTaulukko(
+              mediaArray.filter((file) => {
+                const allData = JSON.parse(file.description);
+                return (
+                  file.title.toUpperCase().includes(text.toUpperCase()) ||
+                  allData.description.toUpperCase().includes(text.toUpperCase())
+                );
+              })
+            );
+          }}
+          value={search}
+        />
+        <View style={styles.sliderContainer}>
+          <Text>Filter price: </Text>
+          <MultiSlider
+            styles={styles.slider}
+            values={[multiSliderValue[0], multiSliderValue[1]]}
+            sliderLength={300}
+            onValuesChange={(values) => {
+              multiSliderValuesChange(values);
+              filterByPrice();
+            }}
+            min={0}
+            max={100}
+            step={10}
+            allowOverlap
+            snapped={true}
+            enableLabel={true}
+            customLabel={CustomLabel}
+          />
+        </View>
+      </View>
+      <View style={styles.lista}>
+        <FlatList
+          data={testiTaulukko}
+          renderItem={({item}) => (
+            <ListItem
+              singleMedia={item}
+              navigation={navigation}
+              showButtons={false}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          onRefresh={refreshList}
+          refreshing={isFetching}
         />
       </View>
-      <FlatList
-        data={testiTaulukko}
-        renderItem={({item}) => (
-          <ListItem
-            singleMedia={item}
-            navigation={navigation}
-            showButtons={false}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        onRefresh={refreshList}
-        refreshing={isFetching}
-      />
     </View>
   );
 };
@@ -103,6 +111,16 @@ List.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+  },
+  haku: {
+    height: '22%',
+    backgroundColor: '#FFFFFF',
+  },
+  lista: {
+    height: '78%',
+  },
   sliderContainer: {
     display: 'flex',
     alignItems: 'center',

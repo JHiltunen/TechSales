@@ -16,8 +16,8 @@ const Home = ({navigation}) => {
         <List navigation={navigation} />
       </View>
       <StatusBar
-        barStyle="dark-content"
-        backgroundColor="white"
+        barStyle="light-content"
+        backgroundColor="#252422"
         hidden={false}
       />
     </SafeAreaView>
