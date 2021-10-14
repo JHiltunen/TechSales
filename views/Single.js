@@ -4,16 +4,18 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  View,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import {Card, ListItem, Text, Icon, Avatar} from 'react-native-elements';
+import {Card, ListItem, Text, Icon, Avatar, Input} from 'react-native-elements';
 import {Video, Audio} from 'expo-av';
-import {useFavourites, useTag, useUser} from '../hooks/ApiHooks';
+import {useFavourites, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {formatDate} from '../utils/dateFunctions';
+import {formatDate, timeSince} from '../utils/dateFunctions';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import Comment from '../components/Comment';
 
 const Single = ({route}) => {
   const {params} = route;
@@ -24,6 +26,8 @@ const Single = ({route}) => {
     getFavouritesByFileId,
     getMyFavourites,
   } = useFavourites();
+  const {uploadComment, loadComments} = useMedia();
+  const [comment, setComment] = useState('');
   const [ownerInfo, setOwnerInfo] = useState({username: ''});
   const [likes, setLikes] = useState([]);
   const [iAmLikingIt, setIAmLikingIt] = useState(false);
@@ -32,6 +36,8 @@ const Single = ({route}) => {
   const {getFilesByTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const allData = JSON.parse(params.description);
+  const [comments, setComments] = useState([]);
+  const [commentUpdate, setCommentUpdate] = useState(0);
 
   // screen orientation, show video in fullscreen when landscape
   const handleVideoRef = (component) => {
@@ -87,6 +93,7 @@ const Single = ({route}) => {
     const token = await AsyncStorage.getItem('userToken');
     setOwnerInfo(await getUserInfo(params.user_id, token));
   };
+
   const getLikes = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -117,18 +124,47 @@ const Single = ({route}) => {
     }
   };
 
+  const getComments = async () => {
+    try {
+      const commentsByFileId = await loadComments(params.file_id);
+      setComments(commentsByFileId);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   useEffect(() => {
     getOwnerInfo();
     getAvatar();
     getLikes();
   }, []);
 
+  useEffect(() => {
+    console.log('kommentit haettu', commentUpdate, comments);
+    getComments();
+  }, [commentUpdate]);
+
+  const postComment = async (fileId, txt) => {
+    try {
+      const token = AsyncStorage.getItem('userToken');
+      const comment = {
+        file_id: fileId,
+        comment: txt,
+      };
+    } catch (e) {
+      console.log('Single.js postComment error', e.message);
+      return e.message;
+    }
+  };
+
   return (
     <ScrollView>
       <Card>
         <ListItem>
           <Avatar source={{uri: avatar}} />
-          <Text>{ownerInfo.username}</Text>
+          <Text>
+            {ownerInfo.username} || {params.file_id}
+          </Text>
         </ListItem>
         <Card.Divider />
         <Card.Title style={styles.title}>{params.title}</Card.Title>
@@ -241,6 +277,48 @@ const Single = ({route}) => {
           )}
           <Text>Likes: {likes.length}</Text>
         </ListItem>
+        <Card.Divider />
+        <Input
+          placeholder="Comment"
+          onChangeText={(value) => {
+            setComment(value);
+          }}
+          leftIcon={<Icon name="comment" size={24} color="black" />}
+          rightIcon={
+            <Icon
+              name="send"
+              size={24}
+              color="black"
+              onPress={async () => {
+                try {
+                  const token = await AsyncStorage.getItem('userToken');
+                  const commentObject = {
+                    file_id: params.file_id,
+                    comment: comment,
+                  };
+                  console.log('comment:', commentObject);
+                  const upload = await uploadComment(
+                    JSON.stringify(commentObject),
+                    token
+                  );
+                  if (upload) {
+                    setCommentUpdate(commentUpdate + 1);
+                    alert('Comment added');
+                  }
+                } catch (e) {
+                  alert('Error: ', e.message);
+                  console.log('Error', e.message);
+                }
+              }}
+            />
+          }
+        />
+        {comments
+          .map((c, index = comments.length - 1 - index) => {
+            console.log('kommentti', c);
+            return <Comment key={index} comment={c} />;
+          })
+          .reverse()}
       </Card>
     </ScrollView>
   );
@@ -260,6 +338,24 @@ const styles = StyleSheet.create({
   },
   listItemContent: {
     flex: 2,
+  },
+  commentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'red',
+    flexWrap: 'nowrap',
+  },
+  commentDetail: {
+    flex: 1,
+    display: 'flex',
+    backgroundColor: 'green',
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+  },
+  timeSince: {
+    flex: 1,
+    flexDirection: 'column',
   },
   text: {
     fontSize: 14,

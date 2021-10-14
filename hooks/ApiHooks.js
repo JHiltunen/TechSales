@@ -44,8 +44,12 @@ const useMedia = (ownFiles) => {
       }
 
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
-        return await loadSingleMedia(media.file_id);
+        const file = await loadSingleMedia(media.file_id);
+        return file;
       });
+
+      // console.log('comments', comments);
+
       return Promise.all(kaikkiTiedot);
     } catch (e) {
       console.log('loadMedia', e.message);
@@ -125,6 +129,48 @@ const useMedia = (ownFiles) => {
     }
   };
 
+  const loadComments = async (id) => {
+    try {
+      const commentsByFileId = await doFetch(baseUrl + 'comments/file/' + id);
+      return commentsByFileId;
+    } catch (e) {
+      console.log('get comments by file id', e.message);
+    }
+  };
+
+  const uploadComment = async (data, token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'POST',
+        headers: {'x-access-token': token, 'Content-type': 'application/json'},
+        body: data,
+      };
+      const result = await doFetch(baseUrl + 'comments', options);
+      return result;
+    } catch (e) {
+      console.log('uploadMedia error', e);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteComment = async (commentId, token) => {
+    try {
+      const options = {
+        method: 'DELETE',
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const result = await doFetch(baseUrl + 'comments/' + commentId, options);
+      return result;
+    } catch (error) {
+      console.log('deleteComment error', error);
+    }
+  };
+
   return {
     mediaArray,
     loading,
@@ -133,6 +179,9 @@ const useMedia = (ownFiles) => {
     uploadMedia,
     deleteMedia,
     modifyMedia,
+    loadComments,
+    uploadComment,
+    deleteComment,
   };
 };
 
@@ -174,8 +223,21 @@ const useUser = () => {
     };
     try {
       const userInfo = await doFetch(baseUrl + 'users/' + userId, options);
-      console.log('getUserInfo', getUserInfo, userId);
-      console.log('getUserInfo', userId);
+      // console.log('getUserInfo', getUserInfo, userId);
+      // console.log('getUserInfo', userId);
+      return userInfo;
+    } catch (e) {
+      console.log('checkToken error', e);
+    }
+  };
+
+  const getCurrentUserInfo = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const userInfo = await doFetch(baseUrl + 'users/user', options);
       return userInfo;
     } catch (e) {
       console.log('checkToken error', e);
@@ -209,7 +271,13 @@ const useUser = () => {
     }
   };
 
-  return {checkToken, register, checkUsernameAvailable, getUserInfo};
+  return {
+    checkToken,
+    register,
+    checkUsernameAvailable,
+    getUserInfo,
+    getCurrentUserInfo,
+  };
 };
 
 const useTag = () => {
