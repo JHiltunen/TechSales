@@ -12,6 +12,7 @@ import {Avatar} from 'react-native-elements';
 import {useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {timeSince} from '../utils/dateFunctions';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 const Comment = ({comment}) => {
   console.log('comment user', comment.user_id, comment.comment);
@@ -32,7 +33,7 @@ const Comment = ({comment}) => {
 
   const getCurrentUserUserInformation = async () => {
     const token = await AsyncStorage.getItem('userToken');
-    const currentUseruserInfo = await getCurrentUserUserInformation(token);
+    const currentUseruserInfo = await getCurrentUserInfo(token);
     setCurrentUser(currentUseruserInfo);
     console.log('current user', currentUser);
   };
@@ -49,6 +50,7 @@ const Comment = ({comment}) => {
   };
 
   useEffect(() => {
+    getCurrentUserUserInformation();
     getUsername();
     getAvatar();
   }, []);
@@ -60,14 +62,14 @@ const Comment = ({comment}) => {
         <Text style={styles.username}>{user.username}</Text>
         <Text> {comment.comment}</Text>
         <Text style={styles.timeSince}>{timeSince(comment.time_added)}</Text>
-        {/* currentUser.user_id === comment.user_id ? (
+        {currentUser.user_id === comment.user_id ? (
           <AntIcon
             name="delete"
             size={20}
             onPress={async () => {
               try {
                 const token = await AsyncStorage.getItem('userToken');
-                const result = await deleteComment(comment.file_id, token);
+                const result = await deleteComment(comment.comment_id, token);
                 console.log('Result:', result);
                 if (result) {
                   alert('Comment deleted');
@@ -77,7 +79,7 @@ const Comment = ({comment}) => {
               }
             }}
           />
-          ) : undefined */}
+        ) : undefined}
       </View>
     </View>
   );

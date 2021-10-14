@@ -156,17 +156,16 @@ const useMedia = (ownFiles) => {
     }
   };
 
-  const deleteComment = async (fileId, token) => {
-    const options = {
-      method: 'DELETE',
-      headers: {'x-access-token': token},
-    };
+  const deleteComment = async (commentId, token) => {
     try {
-      const deleteComment = await doFetch(
-        baseUrl + '/comments/' + fileId,
-        options
-      );
-      return deleteComment;
+      const options = {
+        method: 'DELETE',
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const result = await doFetch(baseUrl + 'comments/' + commentId, options);
+      return result;
     } catch (error) {
       console.log('deleteComment error', error);
     }
