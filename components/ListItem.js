@@ -2,12 +2,7 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {
-  Avatar,
-  Button,
-  Card,
-  ListItem as RNEListItem,
-} from 'react-native-elements';
+import {Avatar, Button, ListItem as RNEListItem} from 'react-native-elements';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
