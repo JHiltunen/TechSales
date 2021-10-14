@@ -312,9 +312,12 @@ const Single = ({route}) => {
             />
           }
         />
-        {comments.map((c, index) => {
-          return <Comment key={index} comment={c} />;
-        })}
+        {comments
+          .map((c, index = comments.length - 1 - index) => {
+            console.log('kommentti', c);
+            return <Comment key={index} comment={c} />;
+          })
+          .reverse()}
       </Card>
     </ScrollView>
   );

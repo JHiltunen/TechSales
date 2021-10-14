@@ -8,23 +8,33 @@ import {
   View,
 } from 'react-native';
 import {uploadsUrl} from '../utils/variables';
-import {Avatar, Button, ListItem as RNEListItem} from 'react-native-elements';
+import {Avatar} from 'react-native-elements';
 import {useMedia, useTag, useUser} from '../hooks/ApiHooks';
-import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {timeSince} from '../utils/dateFunctions';
 
 const Comment = ({comment}) => {
-  const [avatar, setAvatar] = useState('http://placekitten.com/100');
-  const [username, setUsername] = useState('');
+  console.log('comment user', comment.user_id, comment.comment);
+  const [avatar, setAvatar] = useState('https://via.placeholder.com/150');
+  const [currentUser, setCurrentUser] = useState([]);
+  const [user, setUser] = useState([]);
   const {getFilesByTag} = useTag();
-  const {getUserInfo} = useUser();
+  const {getUserInfo, getCurrentUserInfo} = useUser();
+  const {deleteComment} = useMedia();
 
   const getUsername = async () => {
+    console.log('getUsername', comment.user_id, comment.comment);
     const token = await AsyncStorage.getItem('userToken');
     const userInfo = await getUserInfo(comment.user_id, token);
-    console.log('username', userInfo.username);
-    setUsername(userInfo.username);
+    console.log('username', userInfo.username, userInfo.user_id);
+    setUser(userInfo);
+  };
+
+  const getCurrentUserUserInformation = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    const currentUseruserInfo = await getCurrentUserUserInformation(token);
+    setCurrentUser(currentUseruserInfo);
+    console.log('current user', currentUser);
   };
 
   const getAvatar = async () => {
@@ -47,9 +57,27 @@ const Comment = ({comment}) => {
     <View style={styles.container}>
       <Avatar source={{uri: avatar}} rounded />
       <View style={styles.commentDetail}>
-        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.username}>{user.username}</Text>
         <Text> {comment.comment}</Text>
         <Text style={styles.timeSince}>{timeSince(comment.time_added)}</Text>
+        {/* currentUser.user_id === comment.user_id ? (
+          <AntIcon
+            name="delete"
+            size={20}
+            onPress={async () => {
+              try {
+                const token = await AsyncStorage.getItem('userToken');
+                const result = await deleteComment(comment.file_id, token);
+                console.log('Result:', result);
+                if (result) {
+                  alert('Comment deleted');
+                }
+              } catch (e) {
+                console.log('error on comment delete', e.message);
+              }
+            }}
+          />
+          ) : undefined */}
       </View>
     </View>
   );

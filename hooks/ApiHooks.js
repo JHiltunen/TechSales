@@ -132,7 +132,7 @@ const useMedia = (ownFiles) => {
   const loadComments = async (id) => {
     try {
       const commentsByFileId = await doFetch(baseUrl + 'comments/file/' + id);
-      return commentsByFileId.reverse();
+      return commentsByFileId;
     } catch (e) {
       console.log('get comments by file id', e.message);
     }
@@ -224,8 +224,21 @@ const useUser = () => {
     };
     try {
       const userInfo = await doFetch(baseUrl + 'users/' + userId, options);
-      console.log('getUserInfo', getUserInfo, userId);
-      console.log('getUserInfo', userId);
+      // console.log('getUserInfo', getUserInfo, userId);
+      // console.log('getUserInfo', userId);
+      return userInfo;
+    } catch (e) {
+      console.log('checkToken error', e);
+    }
+  };
+
+  const getCurrentUserInfo = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const userInfo = await doFetch(baseUrl + 'users/user', options);
       return userInfo;
     } catch (e) {
       console.log('checkToken error', e);
@@ -259,7 +272,13 @@ const useUser = () => {
     }
   };
 
-  return {checkToken, register, checkUsernameAvailable, getUserInfo};
+  return {
+    checkToken,
+    register,
+    checkUsernameAvailable,
+    getUserInfo,
+    getCurrentUserInfo,
+  };
 };
 
 const useTag = () => {
