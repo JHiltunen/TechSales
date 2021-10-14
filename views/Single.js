@@ -334,7 +334,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignContent: 'flex-start',
-    backgroundColor: 'red',
   },
   listItemTitle: {
     alignSelf: 'flex-start',
@@ -348,13 +347,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'red',
     flexWrap: 'nowrap',
   },
   commentDetail: {
     flex: 1,
     display: 'flex',
-    backgroundColor: 'green',
     flexDirection: 'row',
     alignSelf: 'stretch',
   },
