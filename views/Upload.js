@@ -123,7 +123,6 @@ const Upload = ({navigation}) => {
     <ScrollView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
       >
         <Card style={styles.card}>
           <View>
